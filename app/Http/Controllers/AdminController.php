@@ -8,47 +8,7 @@ use Illuminate\Http\Request;
 class AdminController extends Controller
 {
 
-    /**
-     * Ban a user.
-     *
-     * @param \App\Models\User $user
-     * @return \Illuminate\Http\JsonResponse
-     *
-     * @OA\Post(
-     *     path="/api/users/ban/{user}",
-     *     summary="Ban a user",
-     *     tags={"Admin"},
-     *     @OA\Parameter(
-     *         name="user",
-     *         in="path",
-     *         description="ID of the user to ban",
-     *         required=true,
-     *         @OA\Schema(
-     *             type="integer"
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="User banned successfully",
-     *         @OA\JsonContent(
-     *             @OA\Property(
-     *                 property="status",
-     *                 type="string",
-     *                 example="success"
-     *             ),
-     *             @OA\Property(
-     *                 property="message",
-     *                 type="string",
-     *                 example="User banned successfully"
-     *             )
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=500,
-     *         description="Internal server error"
-     *     )
-     * )
-     */
+   
     public function banUser(User $user)
     {
         try {

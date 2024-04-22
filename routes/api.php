@@ -18,18 +18,17 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function (){
     Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login'])->name('login');
-    Route::post('/register/Coach',[\App\Http\Controllers\AuthController::class,'coachRegistration']);
-    Route::post('/register/Writer',[\App\Http\Controllers\AuthController::class,'writerRegistration']);
-    Route::post('/register/Client',[\App\Http\Controllers\AuthController::class,'clientRegistration']);
+    Route::post('/register/coach',[\App\Http\Controllers\AuthController::class,'coachRegistration']);
+   Route::post('/register/client',[\App\Http\Controllers\AuthController::class,'clientRegistration']);
 });
+Route::get('/recipes/all',[\App\Http\Controllers\RecipesController::class,'allRecipes']);
+Route::get('/coaches/all',[\App\Http\Controllers\CoachController::class,'allCoachs']);
 
 
 Route::middleware('auth:api')->group(function (){
     Route::group(['middleware' => 'role:Client'],function (){
     });
     Route::group(['middleware' => 'role:Coach'],function (){
-       });
-    Route::group(['middleware' => 'role:Writer'],function (){
        });
     Route::group(['middleware' => 'role:admin'],function (){
         });

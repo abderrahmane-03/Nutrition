@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('writers', function (Blueprint $table) {
+        Schema::create('categories_of_recipes', function (Blueprint $table) {
             $table->id();
-            $table->string('bio');
+            $table->foreignId('category_id')->constrained('categories');
+            $table->foreignId('recipe_id')->constrained('recipes');
             $table->timestamps();
         });
     }
@@ -23,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('writers');
+        Schema::dropIfExists('categories_of_recipes');
     }
 };

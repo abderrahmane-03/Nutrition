@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('ingrediants');
             $table->string('instructions');
             $table->string('nutrition_information');
+            $table->foreignId('coach_id')->constrained('coaches');
         });
     }
 

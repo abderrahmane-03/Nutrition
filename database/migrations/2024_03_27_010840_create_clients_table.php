@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('clients', function (Blueprint $table) {
             $table->id();
+            $table->string('gender');
             $table->integer('age');
             $table->decimal('weight');
             $table->decimal('height');
-            $table->string('payment_infos');
-            $table->string('intrest');
+            $table->string('interest');
             $table->timestamps();
             $table->foreignId('user_id')->constrained('users');
         });

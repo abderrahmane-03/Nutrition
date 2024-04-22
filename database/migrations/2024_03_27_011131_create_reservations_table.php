@@ -17,7 +17,9 @@ return new class extends Migration
             $table->string('duration')->nullable();
             $table->string('monthly_price')->nullable();
             $table->integer('total_price');
-    
+            $table->foreignId('coach_id')->constrained('coaches');
+            $table->foreignId('client_id')->constrained('clients');
+
         });
     }
 

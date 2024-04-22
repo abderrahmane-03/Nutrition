@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('favorites', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('coache')->constrained('coaches');
-            $table->foreignId('recipe')->constrained('recipes');
+            $table->foreignId('client_id')->constrained('clients');
+            $table->foreignId('coache_id')->constrained('coaches');
+            $table->foreignId('recipe_id')->constrained('recipes');
             $table->timestamps();
         });
     }

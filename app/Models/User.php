@@ -20,9 +20,13 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $fillable = [
         'name',
+        'lastname',
+        'username',
         'email',
         'password',
-        'role'
+        'role',
+        'profile_picture',
+
     ];
 
     /**
@@ -58,28 +62,28 @@ class User extends Authenticatable implements JWTSubject
     public function is_admin(){
         return $this->admin()->exists();
     }
-    public function is_organizer(){
-        return $this->organizer()->exists();
+    public function is_coach(){
+        return $this->coach()->exists();
     }
-    public function is_volunteer(){
-        return $this->volunteer()->exists();
+    public function is_client(){
+        return $this->client()->exists();
     }
 
     public function getType()
     {
         if ($this->is_admin()) {
             return 'admin';
-        } elseif ($this->is_organizer()) {
-            return 'organizer';
-        } elseif ($this->is_volunteer()) {
-            return 'volunteer';
+        } elseif ($this->is_coach()) {
+            return 'coach';
+        } elseif ($this->is_client()) {
+            return 'client';
         }
     }
-    public function volunteer(){
-        return $this->hasOne(Volunteer::class);
+    public function client(){
+        return $this->hasOne(Client::class);
     }
-    public function organizer(){
-        return $this->hasOne(Organizer::class);
+    public function coach(){
+        return $this->hasOne(Coach::class);
     }
     public function admin(){
         return $this->hasOne(Admin::class);

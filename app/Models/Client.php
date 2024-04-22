@@ -5,12 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Volunteer extends Model
+class Client extends Model
 {
     use HasFactory;
     protected $fillable = [
         'user_id',
-        'skills'
+        'age',
+        'height',
+        'weight',
+        'interest',
+        'gender'
     ];
 
     public function user()
@@ -18,8 +22,12 @@ class Volunteer extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function applications()
+    public function reservations()
     {
-        return $this->hasMany(Application::class);
+        return $this->hasMany(Reservation::class);
+    }
+    public function favorites()
+    {
+        return $this->hasMany(Favorite::class);
     }
 }
