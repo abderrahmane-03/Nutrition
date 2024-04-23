@@ -10,17 +10,20 @@ class Favorite extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id'
+
+        'client_id',
+        'coach_id',
+        'recipe_id'
     ];
 
 
-    public function Coach()
+    public function coach()
     {
-        return $this->hasMany(Coach::class);
+        return $this->belongsTo(Coach::class);
     }
-    public function recipes()
+    public function recipe()
     {
-        return $this->hasMany(Recipe::class);
+        return $this->belongsTo(Recipe::class);
     }
     public function clients()
     {

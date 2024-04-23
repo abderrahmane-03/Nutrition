@@ -4,8 +4,9 @@
 
 namespace App\Services;
 
-use App\Repositories\AuthRepositoryInterface;
 use Illuminate\Http\Request;
+use App\Services\AuthServiceInterface;
+use App\Repositories\AuthRepositoryInterface;
 
 class AuthService implements AuthServiceInterface
 {

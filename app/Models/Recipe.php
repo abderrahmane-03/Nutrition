@@ -16,6 +16,10 @@ class Recipe extends Model
         return $this->belongsTo(Coach::class);
     }
 
+    public function favorite()
+    {
+        return $this->hasOne(Favorite::class);
+    }
     public function review()
     {
         return $this->hasone(Review::class);

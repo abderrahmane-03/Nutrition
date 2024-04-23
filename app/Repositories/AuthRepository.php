@@ -8,6 +8,7 @@ use App\Models\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 
 class AuthRepository implements AuthRepositoryInterface
 {
@@ -26,7 +27,11 @@ class AuthRepository implements AuthRepositoryInterface
                 'gender' => 'nullable',
                 'profile_picture' => 'nullable',
             ]);
-
+            if ($request->hasFile('profile_picture')) {
+                $file = $request->file('profile_picture');
+                $pictureName = time() . '.' . $file->extension();
+                $file->move(public_path('image'), $pictureName);
+            }
             $user = User::create([
                 'name' => $userdata['name'],
                 'lastname' => $userdata['lastname'],
@@ -66,7 +71,11 @@ class AuthRepository implements AuthRepositoryInterface
                 'interest' => 'nullable',
                 'profile_picture' => 'nullable',
             ]);
-
+            if ($request->hasFile('profile_picture')) {
+                $file = $request->file('profile_picture');
+                $pictureName = time() . '.' . $file->extension();
+                $file->move(public_path('image'), $pictureName);
+            } 
             $user = User::create([
                 'name' => $userdata['firstName'],
                 'lastname' => $userdata['lastName'], // Change 'lastName' to 'lastname'
@@ -123,6 +132,7 @@ class AuthRepository implements AuthRepositoryInterface
                     'message' => 'INVALID PASSWORD'
                 ]);
             }
+
             $token = auth()->guard('api')->attempt($credentials);
             return response()->json([
                 'status' => 'success',

@@ -23,7 +23,11 @@ Route::middleware('guest')->group(function (){
 });
 Route::get('/recipes/all',[\App\Http\Controllers\RecipesController::class,'allRecipes']);
 Route::get('/coaches/all',[\App\Http\Controllers\CoachController::class,'allCoachs']);
-
+Route::get('/favorites/all',[\App\Http\Controllers\FavoritesController::class,'allFavorites']);
+Route::post('/fave/recipe/{id}',[\App\Http\Controllers\FavoritesController::class,'createRecipeFavorites']);
+Route::post('/fave/coach/{id}',[\App\Http\Controllers\FavoritesController::class,'createCoachFavorites']);
+Route::post('/unfave/recipe/{id}',[\App\Http\Controllers\FavoritesController::class,'removeRecipeFavorites']);
+Route::post('/unfave/coach/{id}',[\App\Http\Controllers\FavoritesController::class,'removeCoachFavorites']);
 
 Route::middleware('auth:api')->group(function (){
     Route::group(['middleware' => 'role:Client'],function (){

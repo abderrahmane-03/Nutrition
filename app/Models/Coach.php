@@ -24,9 +24,9 @@ class Coach extends Model
     {
         return $this->hasMany(Reservation::class);
     }
-    public function favorites()
+    public function favorite()
     {
-        return $this->belongsTo(Favorite::class);
+        return $this->hasOne(Favorite::class);
     }
     public function categories()
     {
