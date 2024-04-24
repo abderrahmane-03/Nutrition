@@ -11,29 +11,28 @@ class FavoriteRepository implements FavoriteRepositoryInterface
 {
  public function createCoachFavorites(Request $request,$id)
     {
-
-        $clientId = Auth::guard('api')->user()->client->id;
+        $user=Auth::guard('api')->user();
+        $clientId  =  $user->id;
         $Favorite = Favorite::create([
-        'recipe_id' => $id,
-        'client_id' => $clientId,
-]);
-
-
+            'coache_id' => $id,
+            'client_id' => $clientId,
+        ]);
         return response()->json([
             'status' => 'success',
-            'message' => 'Coach faveed Successfully!',
+            'message' => 'Recipe faveed Successfully!',
             'data' => $Favorite,
         ]);
     }
+
     public function createRecipeFavorites(Request $request,$id)
     {
 
-        $clientId  =  Auth::guard('api')->user()->client->id;
+        $user=Auth::guard('api')->user();
+        $clientId  =  $user->id;
         $Favorite = Favorite::create([
             'recipe_id' => $id,
-            'client_id' => $clientId->client_id,
+            'client_id' => $clientId,
         ]);
-
         return response()->json([
             'status' => 'success',
             'message' => 'Recipe faveed Successfully!',
@@ -43,7 +42,9 @@ class FavoriteRepository implements FavoriteRepositoryInterface
 
     public function allFavorites()
     {
-        $clientId = Auth::guard('api')->user()->client->id;
+
+        $user=Auth::guard('api')->user();
+        $clientId  =  $user->id;
 
         $favorites = Favorite::with(['coach', 'recipe'])
             ->where('client_id', $clientId)
@@ -55,36 +56,23 @@ class FavoriteRepository implements FavoriteRepositoryInterface
         ], 200);
     }
 
-    public function removeCoachFavorites(Request $request,$id)
+    public function removeFavorites( Favorite $favorite,$id)
     {
 
-        $clientId = Auth::guard('api')->user()->client->id;
-        $Favorite = Favorite::remove([
-        'recipe_id' => $id,
-        'client_id' => $clientId,
-]);
+        $deleted = $favorite->where('id', $id)->delete();
 
-
+    if ($deleted) {
         return response()->json([
             'status' => 'success',
-            'message' => 'Coach faveed Successfully!',
-            'data' => $Favorite,
-        ]);
-    }
-    public function removeRecipeFavorites(Request $request,$id)
-    {
-
-        $clientId  =  Auth::guard('api')->user()->client->id;
-        $Favorite = Favorite::remove([
-            'recipe_id' => $id,
-            'client_id' => $clientId->client_id,
-        ]);
-
+            'message' => 'Favorite deleted successfully'
+        ],200);
+    } else {
         return response()->json([
-            'status' => 'success',
-            'message' => 'Recipe faveed Successfully!',
-            'data' => $Favorite,
-        ]);
+            'status' => 'error',
+            'message' => 'Failed to delete favorite'
+        ],400);
     }
+    }
+
 
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Models\Favorite;
 use Illuminate\Http\Request;
 use App\Repositories\FavoriteRepositoryInterface;
 
@@ -22,13 +23,9 @@ class FavoritesController extends Controller
     {
         return $this->FavoriteRepository->createCoachFavorites($request,$id);
     }
-    public function removeRecipeFavorites(Request $request,$id)
+    public function removeFavorites(Favorite $favorite,$id)
     {
-        return $this->FavoriteRepository->removeRecipeFavorites($request,$id);
-    }
-    public function removeCoachFavorites(Request $request,$id)
-    {
-        return $this->FavoriteRepository->removeCoachFavorites($request,$id);
+        return $this->FavoriteRepository->removeFavorites( $favorite,$id);
     }
     public function allFavorites()
     {

@@ -12,7 +12,7 @@ class Favorite extends Model
     protected $fillable = [
 
         'client_id',
-        'coach_id',
+        'coache_id',
         'recipe_id'
     ];
 
