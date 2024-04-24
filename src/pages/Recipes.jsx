@@ -7,26 +7,14 @@ export default function Recipes() {
     const [isLoading, setIsLoading] = useState(true);
     const [favorites, setFavorites] = useState([]);
 
-    const heart = async (id) => {
-        try {
-            const response = await fetch(`http://127.0.0.1:8000/api/fave/recipe/${id}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message);
-            }
-        } catch (error) {
-            console.error('Error favoriting recipe:', error);
-        }
+    const isFavorite = (recipeId) => {
+        return favorites.some((fav) => fav.recipe_id === recipeId);
     };
 
     const unheart = async (id) => {
         try {
             const response = await fetch(`http://127.0.0.1:8000/api/unfave/${id}`, {
-                method: 'POST',
+                method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' },
             });
 
@@ -34,8 +22,42 @@ export default function Recipes() {
                 const errorData = await response.json();
                 throw new Error(errorData.message);
             }
+
+            // Update favorites state using the callback function form of setFavorites
+            setFavorites(prevFavorites => prevFavorites.filter(item => item.id !== id));
         } catch (error) {
-            console.error('Error unfavoriting recipe:', error);
+            console.error('Error removing favorite:', error);
+        }
+    };
+
+    const fetchFavorites = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                console.error('JWT token not found in local storage');
+                return;
+            }
+
+            const response = await fetch('http://127.0.0.1:8000/api/favorites/all', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch favorites');
+            }
+
+            const data = await response.json();
+            if (Array.isArray(data.favorites)) {
+                setFavorites(data.favorites);
+            } else {
+                console.error('Data received from API is not in the expected format:', data);
+            }
+        } catch (error) {
+            console.error('Error fetching favorites:', error);
         }
     };
 
@@ -77,39 +99,44 @@ export default function Recipes() {
     }, []);
 
     useEffect(() => {
-        const fetchFavorites = async () => {
-            try {
-                const token = localStorage.getItem('token');
-                if (!token) {
-                    console.error('JWT token not found in local storage');
-                    return;
-                }
-
-                const response = await fetch('http://127.0.0.1:8000/api/favorites/all', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error('Failed to fetch favorites');
-                }
-
-                const data = await response.json();
-                if (Array.isArray(data.favorites)) {
-                    setFavorites(data.favorites);
-                } else {
-                    console.error('Data received from API is not in the expected format:', data);
-                }
-            } catch (error) {
-                console.error('Error fetching favorites:', error);
-            }
-        };
-
+        // Fetch favorites on initial load
         fetchFavorites();
     }, []);
+
+    const handleFavoriteToggle = async (id) => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                console.error('JWT token not found in local storage');
+                return;
+            }
+
+            const response = await fetch(`http://127.0.0.1:8000/api/fave/recipe/${id}`, {
+                method: isFavorite(id) ? 'DELETE' : 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message);
+            }
+
+            // Update favorites state based on the action (add or remove favorite)
+            if (isFavorite(id)) {
+                // If a favorite is being removed, filter it out from the state
+                setFavorites(prevFavorites => prevFavorites.filter(favorite => favorite.recipe_id !== id));
+            } else {
+                // If a new favorite is being added, fetch the updated favorites and set the state
+                fetchFavorites(); // Fetch updated favorites
+            }
+        } catch (error) {
+            console.error('Error toggling favorite:', error);
+        }
+    };
+
 
     if (isLoading) {
         return (
@@ -166,21 +193,44 @@ export default function Recipes() {
                             </div>
                         </div>
                         <div className='flex'>
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="36"
-                                height="36"
-                                viewBox="0 0 28 20"
-                                fill={favorites.includes(recipe.id) ? "red" : "none"}
-                                stroke={favorites.includes(recipe.id) ? "red" : "white"}
-                                onClick={() => favorites.includes(recipe.id) ? unheart(recipe.id) : heart(recipe.id)}
-                                style={{ transition: "fill 0.5s, stroke 0.5s" }}
-                            >
-                                <path d="M7 3C4.239 3 2 5.216 2 7.95c0 2.207.875 7.445 9.488 12.74a.985.985 0 0 0 1.024 0C21.125 15.395 22 10.157 22 7.95 22 5.216 19.761 3 17 3s-5 3-5 3-2.239-3-5-3z" />
-                            </svg>
+                        {favorites.some((favorite) => favorite.recipe_id === recipe.id) ? (
+                                // If the recipe is a favorite, render the red heart icon
+                                <svg
+                                    className='mt-2 ml-3 cursor-pointer'
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="36"
+                                    height="36"
+                                    viewBox="0 0 28 20"
+                                    fill="red"
+                                    stroke='none'
+                                    onClick={() => {
+                                        const favId = favorites.find((favorite) => favorite.recipe_id === recipe.id).id;
+                                        unheart(favId);
+                                    }}
+                                    style={{ transition: "fill 0.5s, stroke 0.5s" }}
+                                >
+                                    <path d="M7 3C4.239 3 2 5.216 2 7.95c0 2.207.875 7.445 9.488 12.74a.985.985 0 0 0 1.024 0C21.125 15.395 22 10.157 22 7.95 22 5.216 19.761 3 17 3s-5 3-5 3-2.239-3-5-3z" />
+                                </svg>
+                            ) : (
+                                // If the recipe is not a favorite, render the gray heart icon
+                                <svg
+                                    className='mt-2 ml-3 cursor-pointer'
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="36"
+                                    height="36" 
+                                    viewBox="0 0 28 20"
+                                    fill="none"
+                                    stroke="gray"
+                                    onClick={() => {
+                                        handleFavoriteToggle(recipe.id);  // Call the favorite toggle function
+                                    }}
+                                    style={{ transition: "fill 0.5s, stroke 0.5s" }}
+                                >
+                                    <path d="M7 3C4.239 3 2 5.216 2 7.95c0 2.207.875 7.445 9.488 12.74a.985.985 0 0 0 1.024 0C21.125 15.395 22 10.157 22 7.95 22 5.216 19.761 3 17 3s-5 3-5 3-2.239-3-5-3z" />
+                                </svg>
+                            )}
                             <p className='mt-2'>{recipe.likes}</p>
-                            <svg className='ml-2' xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 28 20" fill="none" stroke="white"><path d="M14 19c3.771 0 5.657 0 6.828-1.172C22 16.657 22 14.771 22 11c0-3.771 0-5.657-1.172-6.828C19.657 3 17.771 3 14 3h-4C6.229 3 4.343 3 3.172 4.172 2 5.343 2 7.229 2 11c0 3.771 0 5.657 1.172 6.828.653.654 1.528.943 2.828 1.07" /><path d="M12 11v.01" /><path d="M8 11v.01" /><path d="M16 11v.01" /><path d="M14 19c-1.236 0-2.598.5-3.841 1.145-1.998 1.037-2.997 1.556-3.489 1.225-.492-.33-.399-1.355-.212-3.404L6.5 17.5" /></svg>
-                            <p className='mt-2'>{recipe.comments}</p>
+                           
                         </div>
                     </div>
                 ))}
