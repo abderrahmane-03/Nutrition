@@ -1,4 +1,4 @@
-import logo from "../../assets/logo.png";
+import logo from "../assets/logo.png";
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 
@@ -66,10 +66,26 @@ export default function Navbar() {
         >
           BMR Calculator
         </Link>
-
-        {/* Cart Button */}
-
+        <Link
+          to="/Favorites"
+          className={`text-lg  text-black rounded-lg ${activeLink === '/Favorites' ? ' text-lg w-auto px-1  border-green-500  border-b-2 text-green-500 bg-white rounded-none shadow-md' : ''}`}
+          onClick={() => handleLinkClick('/Favorites')}
+        >
+          <svg className="ml-1"
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="36"
+                                height="36"
+                                viewBox="0 0 28 20"
+                                fill="black"
+                                stroke="black"
+                                
+                                style={{ transition: "fill 0.5s, stroke 0.5s" }}
+                            >
+                                <path d="M7 3C4.239 3 2 5.216 2 7.95c0 2.207.875 7.445 9.488 12.74a.985.985 0 0 0 1.024 0C21.125 15.395 22 10.157 22 7.95 22 5.216 19.761 3 17 3s-5 3-5 3-2.239-3-5-3z" />
+                            </svg>
+        </Link>
       </div>
+      
 
       {/* Cart Content */}
       <div className={`fixed inset-y-0 right-0 z-50 flex flex-col w-80 bg-white shadow-lg transition-transform duration-300 ${openCart ? 'transform translate-x-0' : 'transform translate-x-full'}`}>
@@ -165,7 +181,6 @@ export default function Navbar() {
       </div>
      
 
-
       <div className="flex"><button onClick={() => setOpenCart(!openCart)}>
         <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M5 7h13.79a2 2 0 0 1 1.99 2.199l-.6 6A2 2 0 0 1 18.19 17H8.64a2 2 0 0 1-1.962-1.608L5 7z" />
@@ -175,7 +190,7 @@ export default function Navbar() {
         </svg>
       </button>
         <Link
-          to="/register"
+          to="/client_register"
           className="text-green-500 border-2 border-greentext-green-500 text-lg  rounded-lg w-auto text-center sm:text-left hover:border-black hover:text-black hover:bg-white hover:shadow-md px-6 py-1 my-2 sm:my-0 sm:ml-4"
         >
           Register now
@@ -185,6 +200,12 @@ export default function Navbar() {
           className="text-black border-2 border-black text-lg  rounded-lg w-auto text-center sm:text-left hover:border-green-600 hover:text-green-600 hover:bg-white hover:shadow-md px-6 py-1 my-2 sm:my-0 sm:ml-4"
         >
           Login
+        </Link>
+        <Link
+          to="/login"
+          className="text-green-500 border-2 border-greentext-green-500 text-lg  rounded-lg w-auto text-center sm:text-left hover:border-black hover:text-black hover:bg-white hover:shadow-md px-6 py-1 my-2 sm:my-0 sm:ml-4"
+        >
+          logout
         </Link></div>
     </nav>
   );
