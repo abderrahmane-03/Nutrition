@@ -1,7 +1,7 @@
 import logo from "../assets/logo.png";
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
-
+import ShoppingCart from './ShoppingCart';
 export default function Navbar() {
   const [activeLink, setActiveLink] = useState(null);
 
@@ -10,18 +10,9 @@ export default function Navbar() {
   };
   const [openCart, setOpenCart] = useState(false);
   const [showChat, setShowChat] = useState(false);
-  const products = [
-    {
-      id: 1,
-      name: 'Throwback Hip Bag',
-      href: '#',
-      color: 'Salmon',
-      price: '$90.00',
-      quantity: 1,
-      imageSrc: 'https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-01.jpg',
-      imageAlt: 'Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt.',
-    }
-  ];
+  const handleCartClick = () => {
+    setOpenCart(!openCart);
+  };
 
   return (
     <nav className="flex flex-col sm:flex-row w-full justify-between items-center px-4 sm:px-6 py-1 bg-white sm:bg-transparent shadow sm:shadow-none">
@@ -88,51 +79,8 @@ export default function Navbar() {
       
 
       {/* Cart Content */}
-      <div className={`fixed inset-y-0 right-0 z-50 flex flex-col w-80 bg-white shadow-lg transition-transform duration-300 ${openCart ? 'transform translate-x-0' : 'transform translate-x-full'}`}>
-        <div className="flex justify-between items-center px-4 py-2 border-b">
-          <h3 className="text-lg font-medium text-gray-900">Shopping Cart</h3>
-          <button className="text-gray-500 hover:text-gray-700 focus:outline-none" onClick={() => setOpenCart(false)}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-          </button>
-        </div>
-        {/* Cart items and subtotal */}
-        <div className="flex-1 overflow-y-auto px-4 py-2">
-          {products.map((product) => (
-            <div key={product.id} className="py-2">
-              {/* Display product details */}
-              <div className="flex justify-between">
-                <p className="text-lg font-medium text-gray-900">{product.name}</p>
-                <p className="text-lg font-medium text-gray-900">{product.price}</p>
-              </div>
-              <p className="mt-1 text-sm text-gray-500">{product.color}</p>
-              <p className="mt-1 text-sm text-gray-500">Qty {product.quantity}</p>
-            </div>
-          ))}
-        </div>
-        <div className="px-4 py-2 border-t">
-          {/* Cart subtotal and checkout button */}
-          <div className="flex justify-between">
-            <p className="text-lg font-medium text-gray-900">Subtotal</p>
-            <p className="text-lg font-medium text-gray-900">$262.00</p>
-          </div>
-          <div className="mt-2 text-sm text-gray-500">
-            <p>Shipping and taxes calculated at checkout.</p>
-          </div>
-          <div className="mt-6">
-            <Link onClick={() => setOpenCart(false)} to="/Checkout"
-              type="button"
-              className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              Checkout
-            </Link>
-          </div>
-        </div>
-
-
-      </div>
+      
+      {openCart && <ShoppingCart setOpenCart={setOpenCart} />}
       <div className={`fixed inset-y-0 left-0 z-50 flex flex-col w-80 bg-white shadow-lg transition-transform duration-300 ${showChat ? 'transform translate-x-0' : 'transform -translate-x-full'}`}>
      <div className="bg-green-500 p-4 text-white flex justify-between items-center">
           <button id="login" className="hover:bg-green-400 rounded-md p-1">
@@ -181,7 +129,7 @@ export default function Navbar() {
       </div>
      
 
-      <div className="flex"><button onClick={() => setOpenCart(!openCart)}>
+      <div className="flex"><button onClick={handleCartClick}>
         <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M5 7h13.79a2 2 0 0 1 1.99 2.199l-.6 6A2 2 0 0 1 18.19 17H8.64a2 2 0 0 1-1.962-1.608L5 7z" />
           <path d="M5 7l-.81-3.243A1 1 0 0 0 3.22 3H2" />

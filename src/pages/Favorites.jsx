@@ -64,7 +64,7 @@ export default function Favorites() {
                 {/* Display the loading GIF centered and auto-looped */}
                 <img src={loading} alt="loading" className="fixed right-0 w-40 " />
                 <div className="flex ml-32 gap-3 flex-wrap">
-                    {[...Array(10)].map((_, index) => (
+                    {[...Array(8)].map((_, index) => (
                         <div key={index} className="flex mt-10 flex-col bg-neutral-300 ml-4 w-80 h-96 animate-pulse rounded-xl p-4 gap-1">
                             <div className="bg-neutral-400/50 w-full h-32 animate-pulse rounded-md"></div>
                             <div className="flex flex-col gap-2">
@@ -163,10 +163,9 @@ export default function Favorites() {
             >
                 <path d="M7 3C4.239 3 2 5.216 2 7.95c0 2.207.875 7.445 9.488 12.74a.985.985 0 0 0 1.024 0C21.125 15.395 22 10.157 22 7.95 22 5.216 19.761 3 17 3s-5 3-5 3-2.239-3-5-3z" />
             </svg>
-            <p className='mt-2'>23</p>
+            <p className='mt-2'></p>
            
-                            <svg className='ml-2' xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 28 20" fill="none" stroke="white"><path d="M14 19c3.771 0 5.657 0 6.828-1.172C22 16.657 22 14.771 22 11c0-3.771 0-5.657-1.172-6.828C19.657 3 17.771 3 14 3h-4C6.229 3 4.343 3 3.172 4.172 2 5.343 2 7.229 2 11c0 3.771 0 5.657 1.172 6.828.653.654 1.528.943 2.828 1.07" /><path d="M12 11v.01" /><path d="M8 11v.01" /><path d="M16 11v.01" /><path d="M14 19c-1.236 0-2.598.5-3.841 1.145-1.998 1.037-2.997 1.556-3.489 1.225-.492-.33-.399-1.355-.212-3.404L6.5 17.5" /></svg>
-                            <p className='mt-2'>23</p>
+                           
                         </div>
                     </div>
                 ))}

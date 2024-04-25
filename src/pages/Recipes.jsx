@@ -144,7 +144,7 @@ export default function Recipes() {
                 {/* Display the loading GIF centered and auto-looped */}
                 <img src={loading} alt="loading" className="fixed right-0 w-40 " />
                 <div className="flex ml-32 gap-3 flex-wrap">
-                    {[...Array(10)].map((_, index) => (
+                    {[...Array(8)].map((_, index) => (
                         <div key={index} className="flex mt-10 flex-col bg-neutral-300 ml-4 w-80 h-96 animate-pulse rounded-xl p-4 gap-1">
                             {/* Placeholder content for recipe */}
                         </div>

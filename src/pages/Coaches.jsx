@@ -150,7 +150,7 @@ export default function Coaches() {
                 <img src={loading} alt="loading" className="fixed right-0 w-40 " />
                 <div className="flex ml-32 gap-3 flex-wrap">
                     {/* Skeleton UI */}
-                    {[...Array(10)].map((_, index) => (
+                    {[...Array(8)].map((_, index) => (
                         <div key={index} className="flex mt-10 flex-col bg-neutral-300 ml-4 w-80 h-96 animate-pulse rounded-xl p-4 gap-1">
                             <div className="relative flex w-64 animate-pulse gap-2 p-4">
                                 <div className="h-12 w-12 rounded-full bg-neutral-400/50"></div>
@@ -229,7 +229,7 @@ export default function Coaches() {
                                     <path d="M7 3C4.239 3 2 5.216 2 7.95c0 2.207.875 7.445 9.488 12.74a.985.985 0 0 0 1.024 0C21.125 15.395 22 10.157 22 7.95 22 5.216 19.761 3 17 3s-5 3-5 3-2.239-3-5-3z" />
                                 </svg>
                             )}
-                            <p className='mt-4'>23</p>
+                            <p className='mt-4'></p>
                             <strong className='mt-4 ml-28'>{coach.price} MAD</strong>
                             <button className="ml-3 w-18 h-14 bg-green-400 rounded-md p-3 font-bold hover:bg-green-600">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ai ai-Cart">
