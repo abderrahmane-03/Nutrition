@@ -27,6 +27,7 @@ Route::get('/favorites/all',[\App\Http\Controllers\FavoritesController::class,'a
 Route::post('/fave/recipe/{id}',[\App\Http\Controllers\FavoritesController::class,'createRecipeFavorites']);
 Route::post('/fave/coach/{id}',[\App\Http\Controllers\FavoritesController::class,'createCoachFavorites']);
 Route::delete('/unfave/{id}',[\App\Http\Controllers\FavoritesController::class,'removeFavorites']);
+Route::post('/checkout',[\App\Http\Controllers\ClientController::class,'checkout']);
 
 Route::middleware('auth:api')->group(function (){
     Route::group(['middleware' => 'role:Client'],function (){

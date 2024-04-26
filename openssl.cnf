@@ -1,0 +1,18 @@
+[req]
+req_extensions = v3_req
+distinguished_name = req_distinguished_name
+prompt = no
+
+[req_distinguished_name]
+C = YourCountryCode
+ST = YourState
+L = YourLocality
+O = YourOrganization
+OU = YourOrganizationalUnit
+CN = localhost
+
+[v3_req]
+subjectAltName = @alt_names
+
+[alt_names]
+DNS.1 = localhost
