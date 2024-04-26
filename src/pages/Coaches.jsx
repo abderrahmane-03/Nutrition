@@ -2,11 +2,61 @@ import { useState, useEffect } from 'react';
 import test from '../assets/test.jpg';
 import loading from '../assets/loading.gif';
 
+import { useStripe } from "@stripe/react-stripe-js";
 export default function Coaches() {
     const [coaches, setCoaches] = useState([]);
     const [favorites, setFavorites] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const stripe = useStripe();
 
+    const handlePayment = async (price) => {
+        try {
+          setIsLoading(true);
+      
+          // Calculate total payment amount
+          
+          // Send total amount to backend
+          const response = await fetch("http://127.0.0.1:8000/api/checkout", {
+    
+            method: "POST",
+            headers: {
+              Accept: 'application/json',
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ amount:price}),
+          }); 
+      
+          // Check if response is successful
+          if (!response.ok) {
+            throw new Error("Failed to initiate checkout");
+          }
+      
+          // Parse JSON response
+          const data = await response.json();
+          const sessionId = data.sessionId;
+          console.log(sessionId);
+          // Redirect to Stripe checkout
+          redirectToStripeCheckout(sessionId);
+          } catch (error) {
+            console.error("Error:", error);
+          setIsLoading(false);
+        } 
+        };
+        const redirectToStripeCheckout = async (sessionId) => {
+            try {
+              const { error } = await stripe.redirectToCheckout({
+                sessionId,
+              });
+              if (error) {
+                console.error("Stripe Checkout Error:", error);
+                setIsLoading(false);
+              }
+            } catch (error) {
+              console.error("Error redirecting to Stripe Checkout:", error);
+              setIsLoading(false);
+            }
+          };
+   
     // Define isFavorite function
     const isFavorite = (coachId) => {
         return favorites.some((fav) => fav.coach_id === coachId);
@@ -172,8 +222,8 @@ export default function Coaches() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-green-400 to-black ">
-            <div className="flex ml-32  gap-3 flex-wrap">
+        <div className="min-h-screen bg-gradient-to-b from-green-400 to-black flex  items-center ">
+            <div className="flex ml-32 gap-3 flex-wrap">
                 {coaches.map((coach, coachIndex) => (
                     <div key={coachIndex} className="flex mt-10 flex-col bg-neutral-300 ml-4 w-96 h-auto rounded-xl p-4 gap-1">
                         <div className="flex w-80 gap-2 p-4">
@@ -194,7 +244,7 @@ export default function Coaches() {
                         </div>
                         <div className='flex'>
                             {favorites.some((favorite) => favorite.coache_id === coach.id) ? (
-                                // If the coach is a favorite, render the red heart icon
+                              
                                 <svg
                                     className='mt-2 ml-3 cursor-pointer'
                                     xmlns="http://www.w3.org/2000/svg"
@@ -231,7 +281,7 @@ export default function Coaches() {
                             )}
                             <p className='mt-4'></p>
                             <strong className='mt-4 ml-28'>{coach.price} MAD</strong>
-                            <button className="ml-3 w-18 h-14 bg-green-400 rounded-md p-3 font-bold hover:bg-green-600">
+                            <button   onClick={handlePayment(coach.price)} disabled={isLoading} className="ml-3 w-18 h-14 bg-green-400 rounded-md p-3 font-bold hover:bg-green-600">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ai ai-Cart">
                                     <path d="M5 7h13.79a2 2 0 0 1 1.99 2.199l-.6 6A2 2 0 0 1 18.19 17H8.64a2 2 0 0 1-1.962-1.608L5 7z" />
                                     <path d="M5 7l-.81-3.243A1 1 0 0 0 3.22 3H2" />

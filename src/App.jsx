@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -13,10 +13,11 @@ import Coaches from './pages/Coaches';
 import Dashboardcoach from './pages/dashboard/coach';
 import Dashboardadmin from './pages/dashboard/admin';
 import Favorites from './pages/Favorites';
-import ShoppingCart from './components/ShoppingCart'; // Import the ShoppingCart component
+import Paymentsuccess from './pages/PaymentSuccess';
+import ShoppingCart from './components/ShoppingCart';
 import axios from 'axios';
 
-function App() {
+export default function App() {
   return (
     <Router>
       <AppContent />
@@ -26,14 +27,13 @@ function App() {
 
 function AppContent() {
   const location = useLocation();
+  const [openCart, setOpenCart] = useState(false);
+  const [cart, setCart] = useState([]);
 
-  // Check if the current location is /dashboardcoach
-  const isDashboardCoach = location.pathname === '/dashboardcoach';
-  const isDashboardadmin = location.pathname === '/dashboardadmin';
-  
- 
-
-  const [cart, setCart] = useState([]); // State to manage the shopping cart
+  // Function to add coach to cart
+  const addToCart = (coachId) => {
+    setCart([...cart, coachId]);
+  };
 
   // Function to create order and initiate PayPal checkout
   const createOrder = async () => {
@@ -46,21 +46,19 @@ function AppContent() {
     }
   };
 
-  // Function to complete order after PayPal approval
-  const completeOrder = async (orderId) => {
-    try {
-      const response = await axios.post('/complete_order', { intent: 'capture', order_id: orderId });
-      console.log('Order completed successfully:', response.data);
-      // Handle order completion, e.g., show success message, update UI, etc.
-    } catch (error) {
-      console.error('Error completing order:', error);
-      // Handle error, e.g., show error message, retry payment, etc.
-    }
-  };
- if (isDashboardCoach) {
+
+  useEffect(() => {
+    const isOpenCart = location.pathname === '/cart';
+    setOpenCart(isOpenCart);
+  }, [location.pathname]);
+
+  const isDashboardCoach = location.pathname === '/dashboardcoach';
+  const isDashboardadmin = location.pathname === '/dashboardadmin';
+
+  if (isDashboardCoach) {
     return <Dashboardcoach />;
   }
-  
+
   if (isDashboardadmin) {
     return <Dashboardadmin />;
   }
@@ -73,19 +71,24 @@ function AppContent() {
         <Route path="/recipes" element={<Recipes />} />
         <Route path="/client_register" element={<Register />} />
         <Route path="/home" element={<Home />} />
-        <Route path="/coach_register" element={<Coach_register/>}/>
-        <Route path="/coaches" element={<Coaches/>} />
-        <Route path="/BMRCalculator" element={<BMRCalculator/>} />
+        <Route path="/coach_register" element={<Coach_register />} />
+        <Route path="/coaches" element={<Coaches />} />
+        <Route path="/BMRCalculator" element={<BMRCalculator />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/Favorites" element={<Favorites />} />
+        <Route path="/payment-success" element={<Paymentsuccess />} />
         <Route
           path="/cart"
-          element={<ShoppingCart cart={cart} setCart={setCart} createOrder={createOrder} completeOrder={completeOrder} />}
+          element={
+            openCart && (
+              <ShoppingCart cart={cart} setCart={setCart} createOrder={createOrder} setOpenCart={setOpenCart} />
+            )
+          }
         />
+        <Coaches addToCart={addToCart} />
+        <ShoppingCart cart={cart} />
       </Routes>
       {!isDashboardadmin && !isDashboardCoach && <Footer />}
     </>
   );
 }
-
-export default App;
