@@ -15,7 +15,8 @@ export default function Recipes() {
         try {
             const response = await fetch(`http://127.0.0.1:8000/api/unfave/${id}`, {
                 method: 'DELETE',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { Accept: 'application/json',
+                'Content-Type': 'application/json',},
             });
 
             if (!response.ok) {
@@ -41,6 +42,7 @@ export default function Recipes() {
             const response = await fetch('http://127.0.0.1:8000/api/favorites/all', {
                 method: 'GET',
                 headers: {
+                    Accept: 'application/json',
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`
                 }
@@ -73,7 +75,8 @@ export default function Recipes() {
                 const response = await fetch('http://127.0.0.1:8000/api/recipes/all', {
                     method: 'GET',
                     headers: {
-                        'Content-Type': 'application/json',
+                        Accept: 'application/json',
+            'Content-Type': 'application/json',
                         Authorization: `Bearer ${token}`
                     }
                 });
@@ -114,7 +117,8 @@ export default function Recipes() {
             const response = await fetch(`http://127.0.0.1:8000/api/fave/recipe/${id}`, {
                 method: isFavorite(id) ? 'DELETE' : 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+            'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`
                 }
             });
@@ -229,7 +233,7 @@ export default function Recipes() {
                                     <path d="M7 3C4.239 3 2 5.216 2 7.95c0 2.207.875 7.445 9.488 12.74a.985.985 0 0 0 1.024 0C21.125 15.395 22 10.157 22 7.95 22 5.216 19.761 3 17 3s-5 3-5 3-2.239-3-5-3z" />
                                 </svg>
                             )}
-                            <p className='mt-2'>{recipe.likes}</p>
+                            <p className='mt-4 font-bold'>{favorites.filter(fav => fav.recipe_id === recipe.id).length}</p>
                            
                         </div>
                     </div>

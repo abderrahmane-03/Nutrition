@@ -1,19 +1,13 @@
 import logo from "../assets/logo.png";
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
-import ShoppingCart from './ShoppingCart';
 export default function Navbar() {
   const [activeLink, setActiveLink] = useState(null);
 
   const handleLinkClick = (link) => {
     setActiveLink(link);
   };
-  const [openCart, setOpenCart] = useState(false);
   const [showChat, setShowChat] = useState(false);
-  const handleCartClick = () => {
-    setOpenCart(!openCart);
-  };
-
   return (
     <nav className="flex flex-col sm:flex-row w-full justify-between items-center px-4 sm:px-6 py-1 bg-white sm:bg-transparent shadow sm:shadow-none">
       <div className="w-full sm:w-auto self-start sm:self-center flex flex-row sm:flex-none flex-no-wrap justify-between items-center">
@@ -80,7 +74,6 @@ export default function Navbar() {
 
       {/* Cart Content */}
       
-      {openCart && <ShoppingCart setOpenCart={setOpenCart} />}
       <div className={`fixed inset-y-0 left-0 z-50 flex flex-col w-80 bg-white shadow-lg transition-transform duration-300 ${showChat ? 'transform translate-x-0' : 'transform -translate-x-full'}`}>
      <div className="bg-green-500 p-4 text-white flex justify-between items-center">
           <button id="login" className="hover:bg-green-400 rounded-md p-1">
@@ -129,14 +122,7 @@ export default function Navbar() {
       </div>
      
 
-      <div className="flex"><button onClick={handleCartClick}>
-        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M5 7h13.79a2 2 0 0 1 1.99 2.199l-.6 6A2 2 0 0 1 18.19 17H8.64a2 2 0 0 1-1.962-1.608L5 7z" />
-          <path d="M5 7l-.81-3.243A1 1 0 0 0 3.22 3H2" />
-          <path d="M8 21h2" />
-          <path d="M16 21h2" />
-        </svg>
-      </button>
+      <div className="flex">
         <Link
           to="/client_register"
           className="text-green-500 border-2 border-greentext-green-500 text-lg  rounded-lg w-auto text-center sm:text-left hover:border-black hover:text-black hover:bg-white hover:shadow-md px-6 py-1 my-2 sm:my-0 sm:ml-4"

@@ -10,7 +10,8 @@ export default function Favorites() {
         try {
             const response = await fetch(`http://127.0.0.1:8000/api/unfave/${id}`, {
                 method: 'DELETE',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { Accept: 'application/json',
+                'Content-Type': 'application/json', },
             });
 
             if (!response.ok) {
@@ -37,6 +38,7 @@ export default function Favorites() {
                 const response = await fetch('http://127.0.0.1:8000/api/favorites/all', {
                     method: 'GET',
                     headers: {
+                        Accept: 'application/json',
                         'Content-Type': 'application/json',
                         Authorization: `Bearer ${token}`
                     }
@@ -152,7 +154,7 @@ export default function Favorites() {
         {/* Render common elements like likes */}
         <div className='flex'>
             <svg
-            className="ml-4 h-8 cursor-pointer "
+            className="ml-4 mt-6 h-8 cursor-pointer "
                 xmlns="http://www.w3.org/2000/svg"
                 width="36"
                 onClick={() => unheart(item.id)}
@@ -163,7 +165,11 @@ export default function Favorites() {
             >
                 <path d="M7 3C4.239 3 2 5.216 2 7.95c0 2.207.875 7.445 9.488 12.74a.985.985 0 0 0 1.024 0C21.125 15.395 22 10.157 22 7.95 22 5.216 19.761 3 17 3s-5 3-5 3-2.239-3-5-3z" />
             </svg>
-            <p className='mt-2'></p>
+            <p className='mt-4 font-bold'><p className='mt-4 font-bold'>
+  {item.coache_id !== null ? favorites.filter(fav => fav.coache_id === item.coache_id).length : null}
+  {item.recipe_id !== null ? favorites.filter(fav => fav.recipe_id === item.recipe_id).length : null}
+</p>
+</p>
            
                            
                         </div>

@@ -7,11 +7,12 @@ export default function Coaches() {
     const [coaches, setCoaches] = useState([]);
     const [favorites, setFavorites] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [bicepload, setBicepload] = useState(false);
     const stripe = useStripe();
 
     const handlePayment = async (price) => {
         try {
-          setIsLoading(true);
+          setBicepload(true);
       
           // Calculate total payment amount
           
@@ -67,7 +68,8 @@ export default function Coaches() {
         try {
             const response = await fetch(`http://127.0.0.1:8000/api/unfave/${id}`, {
                 method: 'DELETE',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { Accept: 'application/json',
+                'Content-Type': 'application/json', },
             });
 
             if (!response.ok) {
@@ -94,7 +96,8 @@ export default function Coaches() {
             const response = await fetch('http://127.0.0.1:8000/api/favorites/all', {
                 method: 'GET',
                 headers: {
-                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+            'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`
                 }
             });
@@ -128,7 +131,8 @@ export default function Coaches() {
             const response = await fetch(`http://127.0.0.1:8000/api/fave/coach/${id}`, {
                 method: isFavorite(id) ? 'DELETE' : 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+            'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`
                 }
             });
@@ -193,6 +197,17 @@ export default function Coaches() {
         // Fetch favorites on initial load
         fetchFavorites();
     }, []);
+    if (bicepload) {
+        return (
+            <div>
+                
+                <div className="min-h-screen bg-green-600 bg-opacity-80 flex justify-center items-center">
+                    <img src={loading} alt="loading" className="absolute w-44 " />
+                </div>
+            </div>
+        );
+    }
+    
     if (isLoading) {
         return (
             <div className="min-h-screen bg-gradient-to-b from-green-400 to-black flex justify-center items-center">
@@ -279,9 +294,10 @@ export default function Coaches() {
                                     <path d="M7 3C4.239 3 2 5.216 2 7.95c0 2.207.875 7.445 9.488 12.74a.985.985 0 0 0 1.024 0C21.125 15.395 22 10.157 22 7.95 22 5.216 19.761 3 17 3s-5 3-5 3-2.239-3-5-3z" />
                                 </svg>
                             )}
-                            <p className='mt-4'></p>
+                            <p className='mt-4 font-bold'>{favorites.filter(fav => fav.coache_id === coach.id).length}</p>
                             <strong className='mt-4 ml-28'>{coach.price} MAD</strong>
-                            <button   onClick={handlePayment(coach.price)} disabled={isLoading} className="ml-3 w-18 h-14 bg-green-400 rounded-md p-3 font-bold hover:bg-green-600">
+                            <button onClick={() => handlePayment(coach.price)} disabled={bicepload} className="ml-3 w-18 h-14 bg-green-400 rounded-md p-3 font-bold hover:bg-green-600">
+
                                 <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ai ai-Cart">
                                     <path d="M5 7h13.79a2 2 0 0 1 1.99 2.199l-.6 6A2 2 0 0 1 18.19 17H8.64a2 2 0 0 1-1.962-1.608L5 7z" />
                                     <path d="M5 7l-.81-3.243A1 1 0 0 0 3.22 3H2" />
