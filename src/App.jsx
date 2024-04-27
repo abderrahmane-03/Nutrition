@@ -13,6 +13,7 @@ import Dashboardcoach from './pages/dashboard/coach';
 import Dashboardadmin from './pages/dashboard/admin';
 import Favorites from './pages/Favorites';
 import Paymentsuccess from './pages/PaymentSuccess';
+import Paymentcancel from './pages/PaymentCancel';
 
 export default function App() {
   return (
@@ -50,6 +51,7 @@ function AppContent() {
         <Route path="/coaches" element={<Coaches />} />
         <Route path="/BMRCalculator" element={<BMRCalculator />} />
         <Route path="/Favorites" element={<Favorites />} />
+        <Route path="/payment-cancel" element={<Paymentcancel />} />
         <Route path="/payment-success" element={<Paymentsuccess />} />
         
       </Routes>
