@@ -21,6 +21,14 @@ class FavoriteService implements FavoriteServiceInterface
     {
         return $this->FavoriteRepository->allFavorites();
     }
+    public function coachesFavorites()
+    {
+        return $this->FavoriteRepository->coachesFavorites();
+    }
+    public function recipeFavorites()
+    {
+        return $this->FavoriteRepository->recipeFavorites();
+    }
     public function createRecipeFavorites(Request $request,$id)
     {
         return $this->FavoriteRepository->createRecipeFavorites($request,$id);

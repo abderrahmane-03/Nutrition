@@ -17,7 +17,7 @@ class Favorite extends Model
     ];
 
 
-    public function coach()
+    public function coache()
     {
         return $this->belongsTo(Coach::class);
     }

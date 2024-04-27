@@ -31,6 +31,15 @@ class FavoritesController extends Controller
     {
         return $this->FavoriteRepository->allFavorites();
     }
+    public function coachesFavorites()
+    {
+        return $this->FavoriteRepository->coachesFavorites();
+    }
+    public function recipeFavorites()
+    {
+        return $this->FavoriteRepository->recipeFavorites();
+    }
+
 
 
 }

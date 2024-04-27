@@ -2,7 +2,9 @@
 
     namespace App\Http\Controllers;
 
-    use Illuminate\Http\Request;
+use App\Models\Coach;
+use App\Models\Reservation;
+use Illuminate\Http\Request;
     use Stripe\Stripe;
     use Stripe\Checkout\Session;
     use Exception;
@@ -14,26 +16,29 @@
         {
             $request->validate([
                 'amount' => 'required',
+                'coach_id' => 'required', // Assuming coach_id is provided in the request
+                'client_id' => 'required', // Assuming client_id is provided in the request
             ]);
 
             Stripe::setApiKey(env('STRIPE_SECRET'));
 
             try {
+                // Create a session for Stripe Checkout
                 $session = Session::create([
                     'payment_method_types' => ['card'],
                     'line_items' => [[
                         'price_data' => [
                             'currency' => 'MAD',
-                            'unit_amount' => $request->amount * 100,
+                            'unit_amount' => $request->amount, // Convert MAD to smallest currency unit (cents)
                             'product_data' => [
-                                'name' => 'Name', 
+                                'name' => $request->coach, // Replace with actual product name
                             ],
                         ],
                         'quantity' => 1
                     ]],
                     'mode' => 'payment',
-                    'success_url' => 'http://localhost:3000/payment-success?session_id={CHECKOUT_SESSION_ID}',
-                    'cancel_url' => 'http://localhost:3000/payment-cancel',
+                    'success_url' => route('payment.success', ['session_id' => '{CHECKOUT_SESSION_ID}']),
+                    'cancel_url' => route('payment.cancel'),
                 ]);
 
                 return response()->json(['sessionId' => $session->id]);
@@ -41,24 +46,34 @@
                 return response()->json(['error' => $e->getMessage()], 500);
             }
         }
+
+        public function handlePaymentSuccess(Request $request): JsonResponse
+        {
+            // Check if the payment was successful
+            if ($request->session_id) {
+                // Retrieve session data from Stripe
+                Stripe::setApiKey(env('STRIPE_SECRET'));
+                $session = Session::retrieve($request->session_id);
+
+                // Check if the payment status is successful
+                if ($session->payment_status === 'paid') {
+                    // Create reservation
+                    Reservation::create([
+                        'duration' => $session->duration,
+                        'total_price' => $session->amount,
+                        'coach_id' => $session->metadata->coach_id,
+                        'client_id' => $session->metadata->client_id,
+                    ]);
+
+                    // Return success response
+                    return response()->json(['message' => 'Reservation created successfully']);
+                } else {
+                    // Payment was not successful, return error response
+                    return response()->json(['error' => 'Payment was not successful'], 400);
+                }
+            } else {
+                // Session ID not provided, return error response
+                return response()->json(['error' => 'Session ID not provided'], 400);
+            }
+        }
     }
-
-
-    // public function handlePaymentSuccess(Request $request)
-    // {
-    //     $sessionId = $request->get('session_id');
-
-    //     try {
-    //         // Update the payment status of the order using the OrderService
-    //         $order = $this->orderService->updateStatusPayment($sessionId);
-
-    //         // Return a JSON response with the updated order and success message
-    //         return response()->json([
-    //             'order' => $order,
-    //             'message' => 'Payment status updated successfully'
-    //         ], 200);
-    //     } catch (Exception $e) {
-    //         // Handle any exceptions and return an error response
-    //         return response()->json(['error' => $e->getMessage()], 500);
-    //     }
-    // }

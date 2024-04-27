@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('recipe_id')->constrained('recipes')->nullable();
             $table->timestamps();
         });
+
     }
 
     /**

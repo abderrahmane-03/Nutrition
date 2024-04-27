@@ -14,8 +14,7 @@ return new class extends Migration
         Schema::create('reservations', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string('duration')->nullable();
-            $table->string('monthly_price')->nullable();
+            $table->string('duration');
             $table->integer('total_price');
             $table->foreignId('coach_id')->constrained('coaches');
             $table->foreignId('client_id')->constrained('clients');

@@ -12,4 +12,6 @@ interface FavoriteServiceInterface
     public function createRecipeFavorites(Request $request,$id);
     public function createCoachFavorites(Request $request,$id);
     public function allFavorites();
+    public function recipeFavorites();
+    public function coachesFavorites();
 }

@@ -11,7 +11,7 @@ class Recipe extends Model
 
     protected $fillable = ['title', 'description', 'cooking_time', 'ingredients', 'instructions', 'nutrition_information', 'coach_id'];
 
-    public function coach()
+    public function coache()
     {
         return $this->belongsTo(Coach::class);
     }
