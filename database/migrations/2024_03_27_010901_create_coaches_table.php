@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration
 {
@@ -13,15 +14,28 @@ return new class extends Migration
     {
         Schema::create('coaches', function (Blueprint $table) {
             $table->id();
-            $table->string('bio')->nullable();
+            $table->string('bio');
             $table->string('experience');
-            $table->string('price')->nullable();
+            $table->string('price');
             $table->string('sport');
             $table->text('programme');
-            $table->text('services');
+            $table->text('duration');
             $table->foreignId('user_id')->constrained('users');
+            $table->boolean('verified')->default(false);
             $table->timestamps();
         });
+        Schema::table('coaches', function (Blueprint $table) {
+            $table->decimal('avg_rating', 5, 2)->default(0.00);
+        });
+
+        DB::statement("
+            UPDATE coaches c
+            SET avg_rating = (
+                SELECT AVG(rating)
+                FROM reviews
+                WHERE coache_id = c.id
+            )
+        ");
     }
 
     /**

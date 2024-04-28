@@ -31,6 +31,8 @@ Route::post('/fave/recipe/{id}',[\App\Http\Controllers\FavoritesController::clas
 Route::post('/fave/coach/{id}',[\App\Http\Controllers\FavoritesController::class,'createCoachFavorites']);
 Route::delete('/unfave/{id}',[\App\Http\Controllers\FavoritesController::class,'removeFavorites']);
 Route::post('/checkout',[\App\Http\Controllers\ClientController::class,'checkout']);
+Route::post('/stripe/webhook', [App\Http\Controllers\ClientController::class, 'handleStripeWebhook']);
+Route::get('/Reservations', [App\Http\Controllers\ClientController::class, 'clientReservation']);
 
 Route::middleware('auth:api')->group(function (){
     Route::group(['middleware' => 'role:Client'],function (){

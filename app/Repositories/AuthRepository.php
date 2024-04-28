@@ -26,6 +26,11 @@ class AuthRepository implements AuthRepositoryInterface
                 'bio' => 'nullable',
                 'gender' => 'nullable',
                 'profile_picture' => 'nullable',
+                'programme' => 'nullable',
+                'price' => 'nullable',
+                'duration' => 'nullable',
+
+
             ]);
             if ($request->hasFile('profile_picture')) {
                 $file = $request->file('profile_picture');
@@ -46,6 +51,10 @@ class AuthRepository implements AuthRepositoryInterface
             Coach::create([
                 'sport' => $userdata['sport'],
                 'experience' => $userdata['experience'],
+                'programme' => $userdata['programme'],
+                'bio' => $userdata['bio'],
+                'price' => $userdata['price'],
+                'duration' => $userdata['duration'],
                 'user_id' => $user->id,
             ]);
 
@@ -60,9 +69,9 @@ class AuthRepository implements AuthRepositoryInterface
     {
         try {
             $userdata = $request->validate([
-                'firstName' => 'nullable',
-                'lastName' => 'nullable', // Change 'lastname' to 'lastName' here
-                'userName' => 'nullable',
+                'name' => 'nullable',
+                'lastname' => 'nullable', // Change 'lastname' to 'lastName' here
+                'username' => 'nullable',
                 'email' => 'nullable',
                 'password' => 'nullable',
                 'age' => 'nullable',
@@ -75,12 +84,12 @@ class AuthRepository implements AuthRepositoryInterface
                 $file = $request->file('profile_picture');
                 $pictureName = time() . '.' . $file->extension();
                 $file->move(public_path('image'), $pictureName);
-            } 
+            }
             $user = User::create([
-                'name' => $userdata['firstName'],
-                'lastname' => $userdata['lastName'], // Change 'lastName' to 'lastname'
+                'name' => $userdata['name'],
+                'lastname' => $userdata['lastname'], // Change 'lastName' to 'lastname'
                 'role' => 'client',
-                'username' => $userdata['userName'],
+                'username' => $userdata['username'],
                 'email' => $userdata['email'],
                 'password' => Hash::make($userdata['password']),
                 'profile_picture' => $userdata['profile_picture'],

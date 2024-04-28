@@ -13,7 +13,9 @@ class Coach extends Model
         'user_id',
         'experience',
         'sport',
-        'gender'
+        'gender',
+        'programme',
+        'duration',
     ];
     public function user()
     {

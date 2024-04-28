@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('categories_of_recipes', function (Blueprint $table) {
+        Schema::create('reviews', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('category_id')->constrained('categories');
-            $table->foreignId('recipe_id')->constrained('recipes');
+            $table->foreignId("coache_id")->constrained('coaches')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->integer("rating");
             $table->timestamps();
         });
     }
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('categories_of_recipes');
+        Schema::dropIfExists('reviews');
     }
 };
