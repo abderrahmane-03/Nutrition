@@ -48,13 +48,14 @@ export default function Coaches() {
 
     const handlePayment = async (price, name, duration, coach) => {
         try {
-            setBicepload(true);
+           
             const token = localStorage.getItem('token');
-            if (!token) {
-                console.error('JWT token not found in local storage');
-                return;
-            }
-            const response = await fetch("http://127.0.0.1:8000/api/checkout", {
+        if (!token) {
+            window.alert('You need to be logged in to perform this action.');
+            return;
+        }
+            setBicepload(true);
+             const response = await fetch("http://127.0.0.1:8000/api/checkout", {
                 method: "POST",
                 headers: {
                     Accept: 'application/json',
@@ -135,7 +136,7 @@ export default function Coaches() {
             const token = localStorage.getItem('token');
             if (!token) {
                 console.error('JWT token not found in local storage');
-                return;
+                
             }
 
             const response = await fetch('http://127.0.0.1:8000/api/favorites', {
@@ -169,7 +170,7 @@ export default function Coaches() {
             const token = localStorage.getItem('token');
             if (!token) {
                 console.error('JWT token not found in local storage');
-                return;
+                
             }
 
             const response = await fetch('http://127.0.0.1:8000/api/Reservations', {
@@ -198,10 +199,10 @@ export default function Coaches() {
     const handleFavoriteToggle = async (id) => {
         try {
             const token = localStorage.getItem('token');
-            if (!token) {
-                console.error('JWT token not found in local storage');
-                return;
-            }
+        if (!token) {
+            window.alert('You need to be logged in to perform this action.');
+            return;
+        }
 
             const response = await fetch(`http://127.0.0.1:8000/api/fave/coach/${id}`, {
                 method: isFavorite(id) ? 'DELETE' : 'POST',
@@ -228,22 +229,18 @@ export default function Coaches() {
     };
 
     useEffect(() => {
+        setIsLoading(true);
         const fetchCoaches = async () => {
+            
             try {
-                const token = localStorage.getItem('token');
-                if (!token) {
-                    console.error('JWT token not found in local storage');
-                    return;
-                }
-
+                
                 const response = await fetch('http://127.0.0.1:8000/api/coaches/all', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
-                        Authorization: `Bearer ${token}`
                     }
                 });
-
+                
                 if (!response.ok) {
                     throw new Error('Failed to fetch coaches');
                 }
@@ -318,12 +315,22 @@ export default function Coaches() {
                                     <img className="object-cover w-full h-full" src={test} alt="" />
                                 </div>
                                 <div className="text-sm font-serif">{coach.experience} yrs exp</div>
-                                <Rating name="half-rating-read" defaultValue={reviews.find((review) => review.coache_id === coach.id).rating} precision={0.5} readOnly />
+                                <Rating name="half-rating-read" defaultValue={coach.rating} precision={0.5} readOnly />
                             </div>
                             <div className="flex-1">
-                                <div className="mb-1 h-5 w-3/5 rounded-lg text-lg font-serif">{coach.user.name}</div>
+                                <div className="mb-1 h-5 w-3/5 rounded-lg text-lg font-serif">{coach.user.name}{(coach.verified===true)? <svg
+                                    className="ml-4 w-6 h-6 text-gray-800 dark:text-blue-600 "
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        fillRule="evenodd"
+                                        d="M12 2a3 3 0 0 0-2.1.9l-.9.9a1 1 0 0 1-.7.3H7a3 3 0 0 0-3 3v1.2c0 .3 0 .5-.2.7l-1 .9a3 3 0 0 0 0 4.2l1 .9c.2.2.3.4.3.7V17a3 3 0 0 0 3 3h1.2c.3 0 .5 0 .7.2l.9 1a3 3 0 0 0 4.2 0l.9-1c.2-.2.4-.3.7-.3H17a3 3 0 0 0 3-3v-1.2c0-.3 0-.5.2-.7l1-.9a3 3 0 0 0 0-4.2l-1-.9a1 1 0 0 1-.3-.7V7a3 3 0 0 0-3-3h-1.2a1 1 0 0 1-.7-.2l-.9-1A3 3 0 0 0 12 2Zm3.7 7.7a1 1 0 1 0-1.4-1.4L10 12.6l-1.3-1.3a1 1 0 0 0-1.4 1.4l2 2c.4.4 1 .4 1.4 0l5-5Z"
+                                    />
+                                </svg>}</div>
                                 <div className="h-5 w-[90%] rounded-lg text-sm font-serif">{coach.bio}</div>
-                                <div className="text-lg font-bold font-serif">{coach.sport}</div>
+                                <div className="text-lg mt-4 font-bold font-serif">{coach.sport}</div>
                                 <div className="font-serif">-{coach.programme}</div>
                                 <div className="font-serif">-{coach.duration}</div>
                                 <div className="w-full h-4 rounded-md">{coach.services}</div>

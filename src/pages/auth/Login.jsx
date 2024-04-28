@@ -33,13 +33,13 @@ const Signin = () => {
                 if (data && data.user && data.user.role) {
                     switch (data.user.role) {
                         case 'coach':
-                            navigate('/coach_dashboard');
+                            navigate('/dashboardcoach');
                             break;
                         case 'client':
                             navigate('/Recipes');
                             break;
                         case 'admin':
-                            navigate('/admin_dashboard');
+                            navigate('/dashboardadmin');
                             break;
                         default:
                             console.log("Role not recognized:", data.user.role);

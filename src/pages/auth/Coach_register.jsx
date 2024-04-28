@@ -8,6 +8,10 @@ const CoachRegister = () => {
     const [lastname, setLastName] = useState('');
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
+    const [bio, setBio] = useState('');
+    const [duration, setDuration] = useState('');
+    const [programme, setProgramme] = useState('');
+    const [price, setPrice] = useState('');
     const [password, setPassword] = useState('');
     const [sport, setSport] = useState('');
     const [experience, setExperience] = useState('');
@@ -56,6 +60,10 @@ const CoachRegister = () => {
         formData.append('password', password);
         formData.append('sport', sport);
         formData.append('experience', experience);
+        formData.append('bio', bio);
+        formData.append('programme', programme);
+        formData.append('price', price);
+        formData.append('duration', experience);
         formData.append('gender', selectedGender);
           // Check if a file is selected
           if (profilePicture) {
@@ -111,6 +119,18 @@ const CoachRegister = () => {
                             value={sport}
                             onChange={(e) => setSport(e.target.value)}
                             className='bg-slate w-full bg-opacity-40 text-[0.9rem] px-[1rem] py-[0.75rem] rounded-xl text-main focus:outline-none' />
+                     <input
+                            type="number"
+                            placeholder='price'
+                            value={price}
+                            onChange={(e) => setPrice(e.target.value)}
+                            className='bg-slate w-full bg-opacity-40 text-[0.9rem] px-[1rem] py-[0.75rem] rounded-xl text-main focus:outline-none' />
+                         <input
+                            type="number"
+                            placeholder='Experience'
+                            value={experience}
+                            onChange={(e) => setExperience(e.target.value)}
+                            className='bg-slate w-full bg-opacity-40 text-[0.9rem] px-[1rem] py-[0.75rem] rounded-xl text-main focus:outline-none' />
                     </div>
                     <div className='w-[80%] mx-4 flex flex-col gap-[1rem]'>
                         <input
@@ -126,6 +146,15 @@ const CoachRegister = () => {
                             onChange={(e) => setEmail(e.target.value)}
                             className='bg-slate w-full bg-opacity-40 text-[0.9rem] px-[1rem] py-[0.75rem] rounded-xl text-main focus:outline-none' />
                          <input
+                                type="password"
+                                placeholder='Confirm Password*'
+                                className={`bg-slate w-full bg-opacity-40 text-[0.9rem] px-[1rem] py-[0.75rem] rounded-xl text-main focus:outline-none ${passwordError && 'border-red-500'}`}
+                                value={confirmPassword}
+                                onChange={(e) => {
+                                    setConfirmPassword(e.target.value);
+                                    setPasswordError('');
+                                }}
+                            /><input
                             type="text"
                             placeholder='bio'
                             value={bio}
@@ -143,28 +172,7 @@ const CoachRegister = () => {
                             value={programme}
                             onChange={(e) => setProgramme(e.target.value)}
                             className='bg-slate w-full bg-opacity-40 text-[0.9rem] px-[1rem] py-[0.75rem] rounded-xl text-main focus:outline-none' />
-                         <input
-                            type="number"
-                            placeholder='price'
-                            value={price}
-                            onChange={(e) => setPrice(e.target.value)}
-                            className='bg-slate w-full bg-opacity-40 text-[0.9rem] px-[1rem] py-[0.75rem] rounded-xl text-main focus:outline-none' />
-                         <input
-                                type="password"
-                                placeholder='Confirm Password*'
-                                className={`bg-slate w-full bg-opacity-40 text-[0.9rem] px-[1rem] py-[0.75rem] rounded-xl text-main focus:outline-none ${passwordError && 'border-red-500'}`}
-                                value={confirmPassword}
-                                onChange={(e) => {
-                                    setConfirmPassword(e.target.value);
-                                    setPasswordError('');
-                                }}
-                            /><input
-                            type="number"
-                            placeholder='Experience'
-                            value={experience}
-                            onChange={(e) => setExperience(e.target.value)}
-                            className='bg-slate w-full bg-opacity-40 text-[0.9rem] px-[1rem] py-[0.75rem] rounded-xl text-main focus:outline-none' />
-                    </div>
+                        </div>
                 </div>
                 <div className="flex flex-col items-center gap-4 overflow-hidden rounded-md p-6">
                     <span className="text-center font-mono text-base font-black uppercase text-neutral-600">Please select your gender</span>
@@ -188,7 +196,7 @@ const CoachRegister = () => {
                         </div>
                     </div>
                 </div>
-                <div className="flex items-center ml-9 mt-5 mb-3 justify-center w-96">
+                <div className="flex items-center ml-11 mt-5 mb-3 justify-center w-96">
                         <label className="flex flex-col items-center justify-center w-full h-34 border-2 border-green-300 border-dashed rounded-lg cursor-pointer bg-green-50 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-green-200">
                             <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                 <svg className="w-8 h-8 mb-4 text-green-500 dark:text-green-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
