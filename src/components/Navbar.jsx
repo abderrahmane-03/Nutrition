@@ -3,7 +3,10 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 export default function Navbar() {
   const [activeLink, setActiveLink] = useState(null);
-
+  const handleLogout = async () =>
+           {
+            localStorage.removeItem('token');   
+          }
   const handleLinkClick = (link) => {
     setActiveLink(link);
   };
@@ -136,7 +139,7 @@ export default function Navbar() {
           Login
         </Link>
         <Link
-          to="/login"
+          to="/login" onClick={handleLogout}
           className="text-green-500 border-2 border-greentext-green-500 text-lg  rounded-lg w-auto text-center sm:text-left hover:border-black hover:text-black hover:bg-white hover:shadow-md px-6 py-1 my-2 sm:my-0 sm:ml-4"
         >
           logout

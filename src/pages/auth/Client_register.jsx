@@ -70,7 +70,7 @@ const ClientRegister = () => {
         if (picture) {
             formData.append('profile_picture', picture[0]); // Assuming picture is an array of files
         }
-
+        console.log(formData);
         try {
             // Send form data with file to server
             const response = await fetch('http://127.0.0.1:8000/api/register/client', {

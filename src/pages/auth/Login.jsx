@@ -36,7 +36,7 @@ const Signin = () => {
                             navigate('/coach_dashboard');
                             break;
                         case 'client':
-                            navigate('/recipes');
+                            navigate('/Recipes');
                             break;
                         case 'admin':
                             navigate('/admin_dashboard');
