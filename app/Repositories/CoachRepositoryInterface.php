@@ -8,4 +8,5 @@ interface CoachRepositoryInterface
 {
     public function updateCoach(Request $request, $id);
     public function allCoachs();
+    public function getCoachById($id);
 }

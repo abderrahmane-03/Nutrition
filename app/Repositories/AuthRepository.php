@@ -13,57 +13,60 @@ use Illuminate\Support\Facades\Session;
 class AuthRepository implements AuthRepositoryInterface
 {
     public function coachRegistration(Request $request)
-    {
-        try {
-            $userdata = $request->validate([
-                'name' => 'nullable',
-                'lastname' => 'nullable', // Change 'lastname' to 'lastName' here
-                'username' => 'nullable',
-                'email' => 'nullable',
-                'password' => 'nullable',
-                'sport' => 'nullable',
-                'experience' => 'nullable',
-                'bio' => 'nullable',
-                'gender' => 'nullable',
-                'profile_picture' => 'nullable',
-                'programme' => 'nullable',
-                'price' => 'nullable',
-                'duration' => 'nullable',
+{
+    try {
+        $userdata = $request->validate([
+            'name' => 'nullable',
+            'lastname' => 'nullable', // Change 'lastname' to 'lastName' here
+            'username' => 'nullable',
+            'email' => 'nullable',
+            'password' => 'nullable',
+            'sport' => 'nullable',
+            'experience' => 'nullable',
+            'bio' => 'nullable',
+            'gender' => 'nullable',
+            'programme' => 'nullable',
+            'price' => 'nullable',
+            'duration' => 'nullable',
+            'profile_picture'=>'nullable',
+        ]);
 
 
-            ]);
-            if ($request->hasFile('profile_picture')) {
-                $file = $request->file('profile_picture');
-                $pictureName = time() . '.' . $file->extension();
-                $file->move(public_path('image'), $pictureName);
-            }
-            $user = User::create([
-                'name' => $userdata['name'],
-                'lastname' => $userdata['lastname'],
-                'username' => $userdata['username'],
-                'role' => 'coach',
-                'email' => $userdata['email'],
-                'password' => Hash::make($userdata['password']),
-                'gender' => $userdata['gender'],
-                'profile_picture' => $userdata['profile_picture'],
-            ]);
-
-            Coach::create([
-                'sport' => $userdata['sport'],
-                'experience' => $userdata['experience'],
-                'programme' => $userdata['programme'],
-                'bio' => $userdata['bio'],
-                'price' => $userdata['price'],
-                'duration' => $userdata['duration'],
-                'user_id' => $user->id,
-            ]);
-
-            return $user; // Return the created user entity
-        } catch (\Exception $e) {
-            // Log the exception or handle it as needed
-            throw $e; // Re-throw the exception to be handled elsewhere
+        if ($request->hasFile('profile_picture')) {
+            $file = $request->file('profile_picture');
+            $pictureName = time() . '.' . $file->getClientOriginalExtension();
+            $file->storeAs('public/profile_pictures', $pictureName); // Store file in storage/app/public/profile_pictures
+            $profilePictureUrl = 'storage/profile_pictures/' . $pictureName; // Save the file path in the database
         }
+
+        $user = User::create([
+            'name' => $userdata['name'],
+            'lastname' => $userdata['lastname'],
+            'username' => $userdata['username'],
+            'role' => 'coach',
+            'email' => $userdata['email'],
+            'password' => Hash::make($userdata['password']),
+            'gender' => $userdata['gender'],
+            'profile_picture' => $profilePictureUrl,
+        ]);
+
+        Coach::create([
+            'sport' => $userdata['sport'],
+            'experience' => $userdata['experience'],
+            'programme' => $userdata['programme'],
+            'bio' => $userdata['bio'],
+            'price' => $userdata['price'],
+            'duration' => $userdata['duration'],
+            'user_id' => $user->id,
+        ]);
+
+        return $user; // Return the created user entity
+    } catch (\Exception $e) {
+        // Log the exception or handle it as needed
+        throw $e; // Re-throw the exception to be handled elsewhere
     }
+}
+
 
     public function clientRegistration(Request $request)
     {
@@ -80,10 +83,12 @@ class AuthRepository implements AuthRepositoryInterface
                 'interest' => 'nullable',
                 'profile_picture' => 'nullable',
             ]);
+
             if ($request->hasFile('profile_picture')) {
                 $file = $request->file('profile_picture');
-                $pictureName = time() . '.' . $file->extension();
-                $file->move(public_path('image'), $pictureName);
+                $pictureName = time() . '.' . $file->getClientOriginalExtension();
+                $file->storeAs('public/profile_pictures', $pictureName); // Store file in storage/app/public/profile_pictures
+                $profilePictureUrl = 'storage/profile_pictures/' . $pictureName; // Save the file path in the database
             }
             $user = User::create([
                 'name' => $userdata['name'],
@@ -92,7 +97,7 @@ class AuthRepository implements AuthRepositoryInterface
                 'username' => $userdata['username'],
                 'email' => $userdata['email'],
                 'password' => Hash::make($userdata['password']),
-                'profile_picture' => $userdata['profile_picture'],
+                'profile_picture' => $profilePictureUrl,
             ]);
 
             Client::create([

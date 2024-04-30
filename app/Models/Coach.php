@@ -13,7 +13,8 @@ class Coach extends Model
         'user_id',
         'experience',
         'sport',
-        'gender',
+        'bio',
+        'price',
         'programme',
         'duration',
     ];

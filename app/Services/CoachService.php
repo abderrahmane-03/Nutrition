@@ -25,6 +25,10 @@ class CoachService implements CoachServiceInterface
     {
         return $this->CoachRepository->allCoachs();
     }
+    public function getCoachById($id)
+    {
+        return $this->CoachRepository->getCoachById($id);
+    }
 
 
 }

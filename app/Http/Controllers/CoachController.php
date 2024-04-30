@@ -21,7 +21,12 @@ class CoachController extends Controller
 
     public function allCoachs()
     {
+       
         return $this->CoachRepository->allCoachs();
+    }
+    public function getCoachById($id)
+    {
+        return $this->CoachRepository->getCoachById($id);
     }
 
 

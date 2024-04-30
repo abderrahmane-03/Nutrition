@@ -19,10 +19,16 @@ class RecipeRepository implements RecipeRepositoryInterface
                 'cooking_time' => 'required',
                 'ingredients' => 'required',
                 'instructions' => 'required',
+                'picture' => 'required',
                 'nutrition_information' => 'required',
                 'coach_id' => 'required',
             ]);
-
+            if ($request->hasFile('picture')) {
+                $file = $request->file('picture');
+                $pictureName = time() . '.' . $file->getClientOriginalExtension();
+                $file->storeAs('public/pictures', $pictureName); // Store file in storage/app/public/pictures
+                $PictureUrl = 'storage/pictures/' . $pictureName; // Save the file path in the database
+            }
             $recipe = Recipe::create([
                 'title' => $request->title,
                 'description' => $request->description,
@@ -30,6 +36,7 @@ class RecipeRepository implements RecipeRepositoryInterface
                 'ingredients' => $request->ingredients,
                 'instructions' => $request->instructions,
                 'nutrition_information' => $request->nutrition_information,
+                'picture' => $PictureUrl,
                 'coach_id' => $request->coach_id,
             ]);
 

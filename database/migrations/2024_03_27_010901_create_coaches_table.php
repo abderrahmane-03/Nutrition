@@ -21,21 +21,32 @@ return new class extends Migration
             $table->text('programme');
             $table->text('duration');
             $table->foreignId('user_id')->constrained('users');
-            $table->boolean('verified')->default(false);
+            $table->tinyInteger('verified')->nullable();
             $table->timestamps();
         });
         Schema::table('coaches', function (Blueprint $table) {
-            $table->decimal('avg_rating', 5, 2)->default(0.00);
+            $table->decimal('avg_rating', 5,1)->default(0.0);
         });
 
-        DB::statement("
-            UPDATE coaches c
-            SET avg_rating = (
-                SELECT AVG(rating)
-                FROM reviews
-                WHERE coache_id = c.id
-            )
-        ");
+        // DB::statement("
+        // DELIMITER //
+
+        // CREATE TRIGGER update_avg_rating
+        // AFTER INSERT ON reviews
+        // FOR EACH ROW
+        // BEGIN
+        //     UPDATE coaches c
+        //     SET avg_rating = (
+        //         SELECT AVG(rating)
+        //         FROM reviews
+        //         WHERE coache_id = NEW.coache_id
+        //     )
+        //     WHERE id = NEW.coache_id;
+        // END//
+
+        // DELIMITER ;
+
+        // ");
     }
 
     /**

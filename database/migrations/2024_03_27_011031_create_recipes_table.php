@@ -19,6 +19,7 @@ return new class extends Migration
             $table->dateTime('cooking_time');
             $table->string('ingrediants');
             $table->string('instructions');
+            $table->string('picture');
             $table->string('nutrition_information');
             $table->foreignId('coach_id')->constrained('coaches');
         });

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Exception;
 use Stripe\Stripe;
 use Stripe\Webhook;
+use App\Models\Review;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
 use Stripe\Checkout\Session;
@@ -71,7 +72,7 @@ class ClientController extends Controller
         ]);
 
         Stripe::setApiKey(env('STRIPE_SECRET'));
-        $clientId = Auth::guard('api')->user()->getAuthIdentifier();
+        $clientId = Auth::guard('api')->user()->client->id;
 
         try {
             // Create a session for Stripe Checkout
@@ -103,6 +104,42 @@ class ClientController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+    public function Rate(Request $request): JsonResponse
+    {
+        $request->validate([
+            'rating' => 'required',
+            'coache_id' => 'required',
+        ]);
+
+      $clientId = Auth::guard('api')->user()->client->id;
+
+        try {
+            // Create a session for Stripe Checkout
+            $Review = Review::create([
+                'rating'=>$request->rating,
+                'coache_id'=>$request->coache_id,
+                'client_id'=>$clientId,
+            ]);
+
+            return response()->json(['sessionId' => $Review]);
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+    public function Ratings(): JsonResponse
+{
+    $clientId = Auth::guard('api')->user()->client->id ;
+
+    try {
+        // Retrieve ratings for the client
+        $ratings = Review::where('client_id', $clientId)->get();
+
+        // Return the ratings directly
+        return response()->json($ratings->toArray());
+    } catch (Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+}
 
 
     public function handlePaymentSuccess($sessionId)
@@ -136,14 +173,14 @@ class ClientController extends Controller
         }
     }
     public function clientReservation(){
-     $clientId=Auth::guard('api')->user()->id;
+     $clientId=Auth::guard('api')->user()->client->id;
 
      $reservations=Reservation::where('client_id',$clientId)->get();
 
      return response()->json([
         'status' => 'success',
         'reservations' => $reservations,
-        
+
     ], 200);
     }
 

@@ -35,7 +35,16 @@ class CoachRepository implements CoachRepositoryInterface
 
 
 
-
+    public function getCoachById($id)
+    {
+        try {
+            $coach = Coach::findOrFail($id);
+            // You can modify the response format as needed
+            return response()->json($coach);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to fetch coach data'], 404);
+        }
+    }
 
 
     public function allCoachs()

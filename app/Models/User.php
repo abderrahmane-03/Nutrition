@@ -59,26 +59,12 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
-    public function is_admin(){
-        return $this->admin()->exists();
-    }
-    public function is_coach(){
-        return $this->coach()->exists();
-    }
-    public function is_client(){
-        return $this->client()->exists();
-    }
+   
 
     public function getType()
-    {
-        if ($this->is_admin()) {
-            return 'admin';
-        } elseif ($this->is_coach()) {
-            return 'coach';
-        } elseif ($this->is_client()) {
-            return 'client';
-        }
-    }
+{
+    return $this->role; // Assuming 'role' is a field in the users table
+}
     public function client(){
         return $this->hasOne(Client::class);
     }

@@ -13,7 +13,7 @@ class FavoriteRepository implements FavoriteRepositoryInterface
  public function createCoachFavorites(Request $request,$id)
     {
         $user=Auth::guard('api')->user();
-        $clientId  =  $user->id;
+        $clientId  =  $user->client->id;
         $Favorite = Favorite::create([
             'coache_id' => $id,
             'client_id' => $clientId,
@@ -29,7 +29,7 @@ class FavoriteRepository implements FavoriteRepositoryInterface
     {
 
         $user=Auth::guard('api')->user();
-        $clientId  =  $user->id;
+        $clientId  =  $user->client->id;
         $Favorite = Favorite::create([
             'recipe_id' => $id,
             'client_id' => $clientId,
@@ -44,44 +44,49 @@ class FavoriteRepository implements FavoriteRepositoryInterface
     public function allFavorites()
 {
     // Query to retrieve favorites for the specific client
-    $clientId = Auth::guard('api')->user()->id;
-    $clientFavorites = Favorite::with(['coache', 'recipe'])
-        ->where('client_id', $clientId)
-        ->get();
+    // Query to retrieve favorites for the specific client
+$clientId = Auth::guard('api')->user()->client->id;
+$clientFavorites = Favorite::with(['coache.user', 'recipe'])
+    ->where('client_id', $clientId)
+    ->get();
 
-    // Query to count occurrences of each recipe or coach across all clients
-    $allFavorites = Favorite::select('recipe_id', 'coache_id', DB::raw('COUNT(id) as id_count'))
-        ->groupBy('recipe_id', 'coache_id')
-        ->get();
+// Query to count occurrences of each recipe or coach across all clients
+$allFavorites = Favorite::select('recipe_id', 'coache_id', DB::raw('COUNT(id) as id_count'))
+    ->groupBy('recipe_id', 'coache_id')
+    ->get();
 
-    // Prepare associative arrays for counting
-    $recipeCounts = [];
-    $coachCounts = [];
+// Prepare associative arrays for counting
+$recipeCounts = [];
+$coachCounts = [];
 
-    // Count occurrences of each recipe and coach
-    foreach ($allFavorites as $favorite) {
-        if ($favorite->recipe_id !== null) {
-            $recipeCounts[$favorite->recipe_id] = $favorite->id_count;
-        }
-        if ($favorite->coache_id !== null) {
-            $coachCounts[$favorite->coache_id] = $favorite->id_count;
-        }
+// Count occurrences of each recipe and coach
+foreach ($allFavorites as $favorite) {
+    if ($favorite->recipe_id !== null) {
+        $recipeCounts[$favorite->recipe_id] = $favorite->id_count;
     }
-
-    // Prepare merged data
-    $mergedFavorites = [];
-    foreach ($clientFavorites as $favorite) {
-        $mergedFavorites[] = [
-            'favorite' => $favorite,
-            'recipe_count' => isset($recipeCounts[$favorite->recipe_id]) ? $recipeCounts[$favorite->recipe_id] : 0,
-            'coach_count' => isset($coachCounts[$favorite->coache_id]) ? $coachCounts[$favorite->coache_id] : 0,
-        ];
+    if ($favorite->coache_id !== null) {
+        $coachCounts[$favorite->coache_id] = $favorite->id_count;
     }
+}
 
-    return response()->json([
-        'status' => 'success',
-        'favorites' => $mergedFavorites
-    ], 200);
+// Prepare merged data
+$mergedFavorites = [];
+foreach ($clientFavorites as $favorite) {
+    $coach = $favorite->coache()->first(); // Use method call to access the relationship
+    $user = $coach ? $coach->user : null;
+    $mergedFavorites[] = [
+        'favorite' => $favorite,
+        'coach_user' => $user,
+        'recipe_count' => isset($recipeCounts[$favorite->recipe_id]) ? $recipeCounts[$favorite->recipe_id] : 0,
+        'coach_count' => isset($coachCounts[$favorite->coache_id]) ? $coachCounts[$favorite->coache_id] : 0,
+    ];
+}
+
+return response()->json([
+    'status' => 'success',
+    'favorites' => $mergedFavorites
+], 200);
+
 }
 
 public function coachesFavorites()
@@ -92,7 +97,7 @@ public function coachesFavorites()
         ->get();
 
     // Query to retrieve favorites for the specific client
-    $clientId = Auth::guard('api')->user()->id;
+    $clientId = Auth::guard('api')->user()->client->id;
     $clientFavorites = Favorite::with(['coache'])
         ->where('client_id', $clientId)
         ->get();
@@ -112,7 +117,7 @@ public function recipeFavorites()
     ->get();
 
 // Query to retrieve favorites for the specific client
-$clientId = Auth::guard('api')->user()->id;
+$clientId = Auth::guard('api')->user()->client->id;
 $clientFavorites = Favorite::with(['recipe'])
     ->where('client_id', $clientId)
     ->get();

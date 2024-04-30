@@ -15,16 +15,18 @@ class CheckForRole
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next, $role): Response
+    public function handle(Request $request, Closure $next): Response
     {
-        $user = Auth::user();
-        if(!$user || $user->getType() !==  $role){
-            return \response()->json([
+        $user = Auth::guard('api')->user();
+        // return response()->json($user->role);
+        if ($user->role != "client") {
+            return response()->json([
                 'status' => 'failed',
-                'message' => 'Sorry , u have no permissions to perform this action'
+                'message' => 'Sorry, you have no permissions to perform this action'
             ]);
         }
         return $next($request);
     }
+
 
 }

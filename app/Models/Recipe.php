@@ -9,7 +9,7 @@ class Recipe extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'description', 'cooking_time', 'ingredients', 'instructions', 'nutrition_information', 'coach_id'];
+    protected $fillable = ['title', 'description', 'cooking_time', 'ingredients','picture', 'instructions', 'nutrition_information', 'coach_id'];
 
     public function coache()
     {
