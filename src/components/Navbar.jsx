@@ -19,7 +19,7 @@ export default function Navbar() {
     return (
       <nav className="flex flex-col sm:flex-row w-full justify-between items-center px-4 sm:px-6 py-1 bg-white sm:bg-transparent shadow sm:shadow-none">
         <div className="w-full sm:w-auto self-start sm:self-center flex flex-row sm:flex-none flex-no-wrap justify-between items-center">
-          <Link to="/home" className="no-underline">
+          <Link to="/" className="no-underline">
             <img src={logo} className='w-30 h-24' alt="" />
           </Link>
         </div>
@@ -29,7 +29,7 @@ export default function Navbar() {
         >
           {/* Navigation Links */}
           <Link
-            to="/Home"
+            to="/"
             className={`text-lg w-auto px-6 py-1 my-2 sm:my-0 sm:ml-4 text-black rounded-lg ${activeLink === '/Home' ? ' text-lg w-auto px-6 py-1 my-2 sm:my-0 sm:ml-4 border-green-500  border-b-2 text-green-500 bg-white rounded-none shadow-md' : ''}`}
             onClick={() => handleLinkClick('/Home')}
           >
@@ -93,7 +93,7 @@ export default function Navbar() {
                 >
                   {/* Navigation Links */}
                   <Link
-                    to="/Home"
+                    to="/"
                     className={`text-lg w-auto px-6 py-1 my-2 sm:my-0 sm:ml-4 text-black rounded-lg ${activeLink === '/Home' ? ' text-lg w-auto px-6 py-1 my-2 sm:my-0 sm:ml-4 border-green-500  border-b-2 text-green-500 bg-white rounded-none shadow-md' : ''}`}
                     onClick={() => handleLinkClick('/Home')}
                   >
@@ -124,18 +124,18 @@ export default function Navbar() {
                     className={`text-lg  text-black rounded-lg ${activeLink === '/Favorites' ? ' text-lg w-auto px-1  border-green-500  border-b-2 text-green-500 bg-white rounded-none shadow-md' : ''}`}
                     onClick={() => handleLinkClick('/Favorites')}
                   >
-                    <svg className="ml-1"
-                                          xmlns="http://www.w3.org/2000/svg"
-                                          width="36"
-                                          height="36"
-                                          viewBox="0 0 28 20"
-                                          fill="black"
-                                          stroke="black"
-                                          
-                                          style={{ transition: "fill 0.5s, stroke 0.5s" }}
-                                      >
-                                          <path d="M7 3C4.239 3 2 5.216 2 7.95c0 2.207.875 7.445 9.488 12.74a.985.985 0 0 0 1.024 0C21.125 15.395 22 10.157 22 7.95 22 5.216 19.761 3 17 3s-5 3-5 3-2.239-3-5-3z" />
-                                      </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" fill="#F2003C" height="2rem" width="2rem" version="1.1" id="Layer_1" viewBox="0 0 512.001 512.001" xmlSpace="preserve">
+<g>
+	<g>
+		<path d="M378.154,33.557c-64.734,0-103.042,45.167-122.344,78.04c-19.301-32.873-57.609-78.04-122.344-78.04    C57.376,33.557,0,94.631,0,175.62c0,102.358,105.514,179.334,244.953,298.806c3.123,2.683,6.989,4.018,10.856,4.018    s7.733-1.341,10.856-4.018c8.288-7.104,16.415-14.021,24.417-20.813c-46.735-40.907-80.141-78.414-80.141-130.662    c0-62.171,47.117-110.869,107.268-110.869c22.071,0,42.343,6.386,59.944,18.725c17.601-12.339,37.874-18.725,59.944-18.725    c23.414,0,44.798,7.451,62.253,20.13c7.457-18.854,11.269-37.61,11.269-56.592C511.62,94.631,454.244,33.557,378.154,33.557z"/>
+	</g>
+</g>
+<g>
+	<g>
+		<path d="M438.098,245.449c-28.849,0-48.073,15.901-59.944,31.33c-11.872-15.429-31.096-31.33-59.944-31.33    c-41.442,0-73.901,34.045-73.901,77.503c0,54.031,53.044,92.123,123.05,151.528c3.112,2.645,6.957,3.964,10.796,3.964    c3.839,0,7.684-1.32,10.796-3.964c70.029-59.426,123.05-97.506,123.05-151.528C512,279.494,479.534,245.449,438.098,245.449z"/>
+	</g>
+</g>
+</svg>
                   </Link>
                 </div>
                 

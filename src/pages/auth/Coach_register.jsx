@@ -19,27 +19,18 @@ const CoachRegister = () => {
     const navigate = useNavigate();
     const [confirmPassword, setConfirmPassword] = useState('');
     const [passwordError, setPasswordError] = useState('');
-
+    const [error, setError] = useState('');
     const submit = async (e) => {
         e.preventDefault();
     
-        // Check if password and confirm password match
         if (password !== confirmPassword) {
             setPasswordError('Passwords do not match');
-            return; // Exit early if passwords don't match
+            return;
         }
-
-        // Log input values to console
-        console.log('Name:', name);
-        console.log('Last Name:', lastname);
-        console.log('Username:', username);
-        console.log('Email:', email);
-        console.log('Password:', password);
-        console.log('Sport:', sport);
-        console.log('Experience:', experience);
-        console.log('Profile Picture:', profilePicture);
-
-
+        if (!name || !lastname || !username || !email || !password || !confirmPassword) {
+            setError('All fields are required');
+            return;
+        }
         const genderInputs = document.querySelectorAll('input[name="gender"]');
         let selectedGender = '';
         genderInputs.forEach(input => {
@@ -47,12 +38,9 @@ const CoachRegister = () => {
                 selectedGender = input.value;
             }
         });
-        console.log('Gender:', selectedGender);
-    
-        // Create a new FormData object
+        
         const formData = new FormData();
 
-        // Append form data to FormData object
         formData.append('name', name);
         formData.append('lastname', lastname);
         formData.append('username', username);
@@ -65,29 +53,29 @@ const CoachRegister = () => {
         formData.append('price', price);
         formData.append('duration', experience);
         formData.append('gender', selectedGender);
-          // Check if a file is selected
-          if (profilePicture) {
-            formData.append('profile_picture', profilePicture[0]); // Assuming picture is an array of files
+        
+        if (profilePicture) {
+            formData.append('profile_picture', profilePicture[0]);
         }
 
         try {
-            // Send form data with file to server
             const response = await fetch('http://127.0.0.1:8000/api/register/coach', {
                 method: 'POST',
                 body: formData
             });
-
-            // Check if request was successful
+if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message);
+        }
             if (response.ok) {
                 navigate('/login');
             } else {
-                // Handle error
                 console.error('Error:', response.statusText);
             }
         } catch (error) {
             console.error('Error:', error.message);
         }
-     }
+    }
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-green-400 to-black flex justify-center items-center ">
@@ -119,13 +107,13 @@ const CoachRegister = () => {
                             value={sport}
                             onChange={(e) => setSport(e.target.value)}
                             className='bg-slate w-full bg-opacity-40 text-[0.9rem] px-[1rem] py-[0.75rem] rounded-xl text-main focus:outline-none' />
-                     <input
+                        <input
                             type="number"
                             placeholder='price'
                             value={price}
                             onChange={(e) => setPrice(e.target.value)}
                             className='bg-slate w-full bg-opacity-40 text-[0.9rem] px-[1rem] py-[0.75rem] rounded-xl text-main focus:outline-none' />
-                         <input
+                        <input
                             type="number"
                             placeholder='Experience'
                             value={experience}
@@ -145,34 +133,35 @@ const CoachRegister = () => {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             className='bg-slate w-full bg-opacity-40 text-[0.9rem] px-[1rem] py-[0.75rem] rounded-xl text-main focus:outline-none' />
-                         <input
-                                type="password"
-                                placeholder='Confirm Password*'
-                                className={`bg-slate w-full bg-opacity-40 text-[0.9rem] px-[1rem] py-[0.75rem] rounded-xl text-main focus:outline-none ${passwordError && 'border-red-500'}`}
-                                value={confirmPassword}
-                                onChange={(e) => {
-                                    setConfirmPassword(e.target.value);
-                                    setPasswordError('');
-                                }}
-                            /><input
+                        <input
+                            type="password"
+                            placeholder='Confirm Password*'
+                            className={`bg-slate w-full bg-opacity-40 text-[0.9rem] px-[1rem] py-[0.75rem] rounded-xl text-main focus:outline-none ${passwordError && 'border-red-500'}`}
+                            value={confirmPassword}
+                            onChange={(e) => {
+                                setConfirmPassword(e.target.value);
+                                setPasswordError('');
+                            }}
+                        />
+                        <input
                             type="text"
                             placeholder='bio'
                             value={bio}
                             onChange={(e) => setBio(e.target.value)}
                             className='bg-slate w-full bg-opacity-40 text-[0.9rem] px-[1rem] py-[0.75rem] rounded-xl text-main focus:outline-none' />
-                         <input
+                        <input
                             type="number"
                             placeholder='duration'
                             value={duration}
                             onChange={(e) => setDuration(e.target.value)}
                             className='bg-slate w-full bg-opacity-40 text-[0.9rem] px-[1rem] py-[0.75rem] rounded-xl text-main focus:outline-none' />
-                         <input
+                        <input
                             type="text"
                             placeholder='programme'
                             value={programme}
                             onChange={(e) => setProgramme(e.target.value)}
                             className='bg-slate w-full bg-opacity-40 text-[0.9rem] px-[1rem] py-[0.75rem] rounded-xl text-main focus:outline-none' />
-                        </div>
+                    </div>
                 </div>
                 <div className="flex flex-col items-center gap-4 overflow-hidden rounded-md p-6">
                     <span className="text-center font-mono text-base font-black uppercase text-neutral-600">Please select your gender</span>
@@ -197,23 +186,24 @@ const CoachRegister = () => {
                     </div>
                 </div>
                 <div className="flex items-center ml-11 mt-5 mb-3 justify-center w-96">
-                        <label className="flex flex-col items-center justify-center w-full h-34 border-2 border-green-300 border-dashed rounded-lg cursor-pointer bg-green-50 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-green-200">
-                            <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                <svg className="w-8 h-8 mb-4 text-green-500 dark:text-green-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                                    <path stroke="currentColor" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
-                                </svg>
-                                <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">Click to upload profile</span> or drag and drop</p>
-                                <p className="text-xs text-gray-500 dark:text-gray-400">PNG, JPG (MAX. 800x400px)</p>
-                            </div>
-                            <input
-                                id="dropzone-file"
-                                type="file"
-                                // Remove value and onChange props
-                                className="hidden"
-                                // Set onChange event to handle file selection
-                                onChange={(e) => setPicture(e.target.files)}
-                            /></label>
-                    </div>
+                    <label className="flex flex-col items-center justify-center w-full h-34 border-2 border-green-300 border-dashed rounded-lg cursor-pointer bg-green-50 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-green-200">
+                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                            <svg className="w-8 h-8 mb-4 text-green-500 dark:text-green-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                <path stroke="currentColor" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+                            </svg>
+                            <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">Click to upload profile</span> or drag and drop</p>
+                            <p className="text-xs text-gray-500 dark:text-gray-400">PNG, JPG (MAX. 800x400px)</p>
+                        </div>
+                        <input
+                            id="dropzone-file"
+                            type="file"
+                            className="hidden"
+                            onChange={(e) => setPicture(e.target.files)}
+                        />
+                    </label>
+                </div> 
+                <div className=' mx-auto text-red-500 flex items-center justify-center'>
+                   {error} </div> 
                 <div className='w-[80%] mx-auto flex items-center justify-center'>
                     <button onClick={submit} className='w-full rounded-xl py-[0.75rem] bg-green-500 mt-2 mb-4 text-white font-medium hover:bg-hovers'>Sign In</button>
                 </div>
@@ -222,7 +212,7 @@ const CoachRegister = () => {
                 </div>
             </div>
         </div>
-   );
+    );
 }
 
 export default CoachRegister;

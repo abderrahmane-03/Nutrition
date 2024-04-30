@@ -1,24 +1,71 @@
 import { useState, useEffect } from 'react';
-import test from '../assets/test.jpg';
 import loading from '../assets/loading.gif';
 
+import Rating from '@mui/material/Rating';
 export default function Recipes() {
     const [recipes, setRecipes] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [favorites, setFavorites] = useState([]);
-    const [recipe_counts, setrecipeCounts] = useState({}); 
-
+    const [recipe_counts, setrecipeCounts] = useState({});
+    const [coaches, setCoaches] = useState([]);
     const isFavorite = (recipeId) => {
         return favorites.some((fav) => fav.recipe_id === recipeId);
     };
+    useEffect(() => {
+        setIsLoading(true);
+        const fetchCoaches = async () => {
 
+            try {
+                const token = localStorage.getItem('token');
+            if (!token) {
+                console.error('JWT token not found in local storage');
+                return;
+            }
+
+                const response = await fetch('http://127.0.0.1:8000/api/coaches/all', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch coaches');
+                }
+
+                const data = await response.json();
+                if (data.Coachs && Array.isArray(data.Coachs)) {
+                    setCoaches(data.Coachs);
+                } else {
+                    console.error('Data received from API is not in the expected format:', data);
+                }
+            } catch (error) {
+                console.error('Error fetching coaches:', error);
+            } finally {
+                // Introduce a delay before setting isLoading to false
+                setTimeout(() => {
+                    setIsLoading(false); // Set loading to false after fetching data
+                }, 2000);
+            }
+        };
+
+        fetchCoaches();
+    }, []);
     const unheart = async (id) => {
         try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                console.error('JWT token not found in local storage');
+                return;
+            }
             const response = await fetch(`http://127.0.0.1:8000/api/unfave/${id}`, {
                 method: 'DELETE',
                 headers: {
                     Accept: 'application/json',
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+
                 },
             });
 
@@ -104,7 +151,10 @@ export default function Recipes() {
             } catch (error) {
                 console.error('Error fetching recipes:', error);
             } finally {
-                setIsLoading(false);
+                // Introduce a delay before setting isLoading to false
+                setTimeout(() => {
+                    setIsLoading(false); // Set loading to false after fetching data
+                }, 2000);
             }
         };
 
@@ -115,6 +165,7 @@ export default function Recipes() {
         // Fetch favorites on initial load
         fetchFavorites();
     }, []);
+
 
     const handleFavoriteToggle = async (id) => {
         try {
@@ -172,40 +223,57 @@ export default function Recipes() {
         <div className="min-h-screen bg-gradient-to-b from-green-400 to-black">
             <div className="flex ml-32 gap-3 flex-wrap">
                 {recipes.map((recipe, index) => (
-                    <div key={index} className="flex mt-10 flex-col bg-neutral-300 ml-4 w-96 h-auto rounded-xl p-4 gap-1">
-                        <div className="bg-neutral-400/50 w-full h-32 rounded-md overflow-hidden">
-                            <img className="object-cover w-full h-full" src={test} alt="" />
-                        </div>
+                    <div key={index} className="flex mt-10 gap-6 flex-col bg-neutral-300 ml-4 w-[27rem] h-auto rounded-xl p-4 ">
                         <div className="flex flex-col gap-2">
+                            <div className="flex">
+                                {coaches.map((coach, coachIndex) => (
+                                    <div key={coachIndex} className="flex flex-col bg-neutral-300 ml-4 w-96 h-auto rounded-xl p-4 gap-1">
+                                        <div className="flex w-80 gap-2 p-4">
+                                            <div className="flex flex-col">
+                                                <div className="h-12 w-12 rounded-full bg-neutral-400/50 overflow-hidden">
+                                                    <img className="object-cover w-full h-full" src={`http://127.0.0.1:8000/${coach.user.profile_picture}`} alt="" />
+                                                </div>
+                                                <div className="text-sm font-serif">{coach.experience} years experience</div>
+                                                <div className='flex'>
+                                                    <div className='font-bold'>{coach.avg_rating}</div>
+                                                    {/* Assuming you have a Rating component */}
+                                                    <Rating name="half-rating-read" value={coach.avg_rating} precision={0.5} readOnly />
+                                                </div>
+                                            </div>
+                                            <div className="flex-1">
+                                                <div className="mb-1 h-5  rounded-lg text-lg font-serif">{coach.user.name}</div>
+                                                {/* Display verified icon if coach is verified */}
+                                                {coach.verified && (
+                                                    <svg
+                                                        className="ml-4 w-6 h-6 text-gray-800 dark:text-blue-600 "
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        fill="currentColor"
+                                                        viewBox="0 0 24 24"
+                                                    >
+                                                        <path
+                                                            fillRule="evenodd"
+                                                            d="M12 2a3 3 0 0 0-2.1.9l-.9.9a1 1 0 0 1-.7.3H7a3 3 0 0 0-3 3v1.2c0 .3 0 .5-.2.7l-1 .9a3 3 0 0 0 0 4.2l1 .9c.2.2.3.4.3.7V17a3 3 0 0 0 3 3h1.2c.3 0 .5 0 .7.2l.9 1a3 3 0 0 0 4.2 0l.9-1c.2-.2.4-.3.7-.3H17a3 3 0 0 0 3-3v-1.2c0-.3 0-.5.2-.7l1-.9a3 3 0 0 0 0-4.2l-1-.9a1 1 0 0 1-.3-.7V7a3 3 0 0 0-3-3h-1.2a1 1 0 0 1-.7-.2l-.9-1A3 3 0 0 0 12 2Zm3.7 7.7a1 1 0 1 0-1.4-1.4L10 12.6l-1.3-1.3a1 1 0 0 0-1.4 1.4l2 2c.4.4 1 .4 1.4 0l5-5Z"
+                                                        />
+                                                    </svg>
+                                                )}
+                                                <div className="h-5 w-[90%] rounded-lg text-sm font-serif">{coach.bio}</div>
+                                            </div>
+                                            <div className="bottom-5 right-0 h-4  rounded-full"></div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div><div className="bg-neutral-400/50 w-full h-32 rounded-md overflow-hidden">
+                                <img className="object-cover w-full h-full" src={`http://127.0.0.1:8000/${recipe.picture}`} alt="" />
+                            </div>
                             <div className="text-lg font-bold font-serif">{recipe.title}</div>
+                            <div>{recipe.description}</div>
                             <div className="font-serif">{recipe.ingredients}</div>
                             <div className="w-full h-4 rounded-md">{recipe.cooking_time}</div>
-                            <div className="w-2/4 h-4 rounded-md">{recipe.nutrition_information}</div>
-                            <div>{recipe.description}</div>
+                            <div className="w-full h-4 rounded-md">{recipe.nutrition_information}</div>
                         </div>
-                        <div className="flex w-64 gap-2 p-4">
-                            <div className="h-12 w-12 rounded-full bg-neutral-400/50 overflow-hidden">
-                                <img className="object-cover w-full h-full" src={test} alt="" />
-                            </div>
-                            <div className="flex-1">
-                                <div className="mb-1 h-5 w-3/5 rounded-lg text-lg font-serif">Abderrahmane</div>
-                                <div className="h-5 w-[90%] rounded-lg text-sm font-serif">my bio is here </div>
-                            </div>
-                            <div className=" bottom-5 right-0 h-4 w-4 rounded-full">
-                                <svg
-                                    className="ml-4 w-6 h-6 text-gray-800 dark:text-blue-600"
-                                    aria-hidden="true"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        fillRule="evenodd"
-                                        d="M12 2a3 3 0 0 0-2.1.9l-.9.9a1 1 0 0 1-.7.3H7a3 3 0 0 0-3 3v1.2c0 .3 0 .5-.2.7l-1 .9a3 3 0 0 0 0 4.2l1 .9c.2.2.3.4.3.7V17a3 3 0 0 0 3 3h1.2c.3 0 .5 0 .7.2l.9 1a3 3 0 0 0 4.2 0l.9-1c.2-.2.4-.3.7-.3H17a3 3 0 0 0 3-3v-1.2c0-.3 0-.5.2-.7l1-.9a3 3 0 0 0 0-4.2l-1-.9a1 1 0 0 1-.3-.7V7a3 3 0 0 0-3-3h-1.2a1 1 0 0 1-.7-.2l-.9-1A3 3 0 0 0 12 2Zm3.7 7.7a1 1 0 1 0-1.4-1.4L10 12.6l-1.3-1.3a1 1 0 0 0-1.4 1.4l2 2c.4.4 1 .4 1.4 0l5-5Z"
-                                    />
-                                </svg>
-                            </div>
-                        </div>
+                        {/* Render coaches */}
+
+                        {/* Render favorite icon and count */}
                         <div className='flex'>
                             {favorites.some((favorite) => favorite.recipe_id === recipe.id) ? (
                                 <svg
@@ -244,7 +312,6 @@ export default function Recipes() {
 
                             {/* Display recipe Count next to Heart Icon */}
                             <p className='mt-4 font-bold'>{recipe_counts[recipe.id] || 0}</p>
-
                         </div>
                     </div>
                 ))}
