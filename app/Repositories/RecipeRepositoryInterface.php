@@ -10,4 +10,5 @@ interface RecipeRepositoryInterface
     public function updateRecipe(Request $request, $id);
     public function deleteRecipe(Request $request, Recipe $Recipe);
     public function allRecipes();
+    public function CoachRecipes();
 }

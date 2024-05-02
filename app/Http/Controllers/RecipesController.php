@@ -29,6 +29,11 @@ class RecipesController extends Controller
     {
         return $this->recipeRepository->allRecipes();
     }
+    public function CoachRecipes()
+    {
+        return $this->recipeRepository->CoachRecipes();
+    }
+
 
 
 }

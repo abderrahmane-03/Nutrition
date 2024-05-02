@@ -12,17 +12,18 @@ class RecipeRepository implements RecipeRepositoryInterface
 {
     public function createRecipe(Request $request)
     {
+        $coach_id = Auth::guard('api')->user()->coach->id;
+
         try {
             $request->validate([
                 'title' => 'required',
                 'description' => 'required',
                 'cooking_time' => 'required',
-                'ingredients' => 'required',
+                'ingrediants' => 'required',
                 'instructions' => 'required',
                 'picture' => 'required',
                 'nutrition_information' => 'required',
-                'coach_id' => 'required',
-            ]);
+             ]);
             if ($request->hasFile('picture')) {
                 $file = $request->file('picture');
                 $pictureName = time() . '.' . $file->getClientOriginalExtension();
@@ -33,18 +34,17 @@ class RecipeRepository implements RecipeRepositoryInterface
                 'title' => $request->title,
                 'description' => $request->description,
                 'cooking_time' => $request->cooking_time,
-                'ingredients' => $request->ingredients,
+                'ingrediants' => $request->ingrediants,
                 'instructions' => $request->instructions,
                 'nutrition_information' => $request->nutrition_information,
                 'picture' => $PictureUrl,
-                'coach_id' => $request->coach_id,
+                'coach_id' => $coach_id,
             ]);
 
             return response()->json([
                 'status' => 'success',
                 'message' => 'Recipe Created Successfully!',
                 'data' => $recipe,
-                'session' => Session::get('role')
             ]);
         } catch (\Exception $e) {
             return response()->json($e->getMessage());
@@ -59,7 +59,7 @@ class RecipeRepository implements RecipeRepositoryInterface
             'title' => 'required|string',
             'description' => 'required|string',
             'cooking_time' => 'required',
-            'ingredients' => 'required',
+            'ingrediants' => 'required',
             'instructions' => 'required',
             'nutrition_information' => 'required',
             'coach_id' => 'required',
@@ -93,7 +93,14 @@ class RecipeRepository implements RecipeRepositoryInterface
             'Recipes' => $Recipes
         ],200);
     }
-
+    public function CoachRecipes(){
+        $coach_id=Auth::guard('api')->user()->coach->id;
+        $Recipes=Recipe::where('coach_id',$coach_id)->get();
+        return response()->json([
+            'status'=>'success',
+            'Recipes' => $Recipes
+        ],200);
+    }
 
 
 }

@@ -16,11 +16,11 @@ class chatController extends Controller
     public function chatForm($user_id){
 
         $receiver = User::findOrFail($user_id);
-
+        broadcast(new ChatSent($receiver, '2'));
         return response()->json([
             'status' => 'success',
             'receiver' => $receiver,
-            
+
         ], 200);
     }
 

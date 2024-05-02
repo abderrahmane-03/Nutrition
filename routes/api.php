@@ -35,7 +35,6 @@ Route::post('/fave/recipe/{id}',[\App\Http\Controllers\FavoritesController::clas
 Route::post('/fave/coach/{id}',[\App\Http\Controllers\FavoritesController::class,'createCoachFavorites']);
 Route::delete('/unfave/{id}',[\App\Http\Controllers\FavoritesController::class,'removeFavorites']);
 Route::post('/checkout',[\App\Http\Controllers\ClientController::class,'checkout']);
-Route::post('/stripe/webhook', [App\Http\Controllers\ClientController::class, 'handleStripeWebhook']);
 Route::get('/Reservations', [App\Http\Controllers\ClientController::class, 'clientReservation']);
 Route::post('/Rate', [App\Http\Controllers\ClientController::class, 'Rate']);
 });
@@ -45,7 +44,10 @@ Route::post('/Rate', [App\Http\Controllers\ClientController::class, 'Rate']);
         });
     Route::post('/logout',[\App\Http\Controllers\AuthController::class,'logout']);
 // });
+Route::post('/stripe/webhook', [App\Http\Controllers\ClientController::class, 'handleStripeWebhook']);
+Route::get('/recipes/coach',[\App\Http\Controllers\RecipesController::class,'CoachRecipes']);
 
+Route::post('/recipes/create',[\App\Http\Controllers\RecipesController::class,'createRecipe']);
 Route::get('/chatForm/{user_id}', [App\Http\Controllers\chatController::class, 'chatForm']);
 Route::post('/chatMessage/{user_id}', [App\Http\Controllers\chatController::class, 'sendMessage']);
 Route::get('/bringClients', [App\Http\Controllers\chatController::class, 'bringClients']);

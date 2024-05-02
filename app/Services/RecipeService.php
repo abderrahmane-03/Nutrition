@@ -30,5 +30,9 @@ class RecipeService implements RecipeServiceInterface
     {
         return $this->RecipeRepository->allRecipes();
     }
+    public function CoachRecipes()
+    {
+        return $this->RecipeRepository->CoachRecipes();
+    }
 
 }
