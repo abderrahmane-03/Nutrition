@@ -16,7 +16,11 @@ return [
     */
 
     'default' => env('BROADCAST_DRIVER', 'null'),
-
+    
+    'options' => [
+        'cluster' => 'eu',
+        'useTLS' => true
+      ],
     /*
     |--------------------------------------------------------------------------
     | Broadcast Connections

@@ -175,7 +175,7 @@ class ClientController extends Controller
     public function clientReservation(){
      $clientId=Auth::guard('api')->user()->client->id;
 
-     $reservations=Reservation::where('client_id',$clientId)->get();
+     $reservations=Reservation::where('client_id',$clientId)->with('coach.user')->get();
 
      return response()->json([
         'status' => 'success',

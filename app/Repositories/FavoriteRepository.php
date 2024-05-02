@@ -45,10 +45,10 @@ class FavoriteRepository implements FavoriteRepositoryInterface
 {
     // Query to retrieve favorites for the specific client
     // Query to retrieve favorites for the specific client
-$clientId = Auth::guard('api')->user()->client->id;
-$clientFavorites = Favorite::with(['coache.user', 'recipe'])
-    ->where('client_id', $clientId)
-    ->get();
+    $clientId = Auth::guard('api')->user()->client->id;
+    $clientFavorites = Favorite::with(['coache.user', 'recipe'])
+        ->where('client_id', $clientId)
+        ->get();
 
 // Query to count occurrences of each recipe or coach across all clients
 $allFavorites = Favorite::select('recipe_id', 'coache_id', DB::raw('COUNT(id) as id_count'))
