@@ -1,4 +1,5 @@
 import React from 'react'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import logo from "../../../assets/logo.png";
 import { Link } from 'react-router-dom';
 import Users from './Users';
@@ -7,8 +8,17 @@ const handleLogout = async () =>
  localStorage.removeItem('token'); 
  localStorage.removeItem('role');  
 }
+
 export default function coachdash() {      
-   return (  
+  const token = localStorage.getItem('token');
+
+    if (!token) {
+     
+        localStorage.removeItem('token'); 
+        localStorage.removeItem('role');  
+        // If user's role does not match requiredRole, redirect to login
+         return <Navigate to="/login" replace />;
+      } return (  
     <>
 
 <div className='flex'>

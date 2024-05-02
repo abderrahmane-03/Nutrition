@@ -1,5 +1,6 @@
 function Admin() {
-    return (
+   
+      return (
         <div className="flex flex-row gap-8 justify-center">
             <div className="flex-1 ml-10 p-4 w-full md:w-1/2">
                 <div className="mt-8 flex flex-wrap space-x-0 space-y-2 md:space-x-4 md:space-y-0">

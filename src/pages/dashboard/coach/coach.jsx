@@ -138,7 +138,15 @@ const Dashboardcoach = () => {
             console.error('Error sending message:', error);
         }
     };
+    const token = localStorage.getItem('token');
 
+    if (!token) {
+     
+        localStorage.removeItem('token'); 
+        localStorage.removeItem('role');  
+        // If user's role does not match requiredRole, redirect to login
+         return <Navigate to="/login" replace />;
+      }
     return (
         <>
             <aside className="flex flex-col w-64 h-screen px-4 py-8 overflow-y-auto bg-white border-r rtl:border-r-0 rtl:border-l dark:bg-green-800 dark:border-green-700">

@@ -28,7 +28,7 @@ function AppContent() {
   useEffect(() => {
     // Check if the user is authenticated, e.g., by checking if token exists in localStorage
     const token = localStorage.getItem('token');
-    setIsAuthenticated(!!token); // Set isAuthenticated to true if token exists, false otherwise
+    setIsAuthenticated(token); // Set isAuthenticated to true if token exists, false otherwise
 
     // Fetch user role from local storage
     const storedRole = localStorage.getItem('role');
@@ -37,8 +37,11 @@ function AppContent() {
 
   // PrivateRoute component to restrict access to authenticated users only
   const Routte = ({ element, requiredRole }) => {
-    if (isAuthenticated) {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
       // If user is authenticated
+      console.log("here");
       if (userRole === requiredRole) {
         // If user's role matches requiredRole, render the element
         return element;
@@ -46,12 +49,12 @@ function AppContent() {
         localStorage.removeItem('token'); 
         localStorage.removeItem('role');  
         // If user's role does not match requiredRole, redirect to login
-        return <Navigate to="/login" replace />;
+        return <Navigate to="/login"  />;
       }
     } else {
       localStorage.removeItem('token'); 
       localStorage.removeItem('role');  
-      return <Navigate to="/login" replace />;
+      return <Navigate to="/login"  />;
     }
   };
 
@@ -78,12 +81,12 @@ function AppContent() {
         <Route path="/" element={<Home />} />
         <Route path="/users" element={<Users />} />
         <Route path="/coaches" element={<Coaches />} />
-        <Route path="/BMRCalculator" element={<BMRCalculator />} requiredRole="client" />
-        <Route path="/dashboardcoach" element={<Dashboardcoach />} requiredRole="coach" />
-        <Route path="/dashboardadmin" element={<Dashboardadmin />} requiredRole="admin" />
-        <Route path="/Favorites" element={<Favorites />} requiredRole="client" />
-        <Route path="/payment-cancel" element={<PaymentCancel />} requiredRole="client" />
-        <Route path="/payment-success" element={<PaymentSuccess />} requiredRole="client" />
+        <Route path="/BMRCalculator" element={<BMRCalculator />} />
+        <Route path="/dashboardcoach" element={<Dashboardcoach />} />
+        <Route path="/dashboardadmin" element={<Dashboardadmin />}  />
+        <Route path="/Favorites" element={<Favorites />} />
+        <Route path="/payment-cancel" element={<PaymentCancel />} />
+        <Route path="/payment-success" element={<PaymentSuccess />} />
       </Routes>
       {!isDashboardAdmin && !isDashboardCoach && <Footer />}
     </>
@@ -91,6 +94,7 @@ function AppContent() {
 }
 
 export default function App() {
+  
   return (
     <Router>
       <AppContent />
