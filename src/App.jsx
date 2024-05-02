@@ -1,5 +1,6 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'; // Added 'Navigate'
-
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -9,13 +10,85 @@ import CoachRegister from './pages/auth/Coach_register';
 import Recipes from './pages/Recipes';
 import BMRCalculator from './pages/BMR';
 import Coaches from './pages/Coaches';
-import Dashboardcoach from './pages/dashboard/coach';
-import Dashboardadmin from './pages/dashboard/admin';
+import Dashboardcoach from './pages/dashboard/coach/coach';
+import Dashboardadmin from './pages/dashboard/admin/admin';
 import Favorites from './pages/Favorites';
 import PaymentSuccess from './pages/PaymentSuccess';
+import Users from './pages/dashboard/admin/Users';
 import PaymentCancel from './pages/PaymentCancel';
-import { jwtDecode } from 'jwt-decode';
+import { useLocation } from 'react-router-dom';
 
+function AppContent() {
+  const location = useLocation();
+  const isDashboardCoach = location.pathname === '/dashboardcoach';
+  const isDashboardAdmin = location.pathname === '/dashboardadmin';
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userRole, setUserRole] = useState(null);
+
+  useEffect(() => {
+    // Check if the user is authenticated, e.g., by checking if token exists in localStorage
+    const token = localStorage.getItem('token');
+    setIsAuthenticated(!!token); // Set isAuthenticated to true if token exists, false otherwise
+
+    // Fetch user role from local storage
+    const storedRole = localStorage.getItem('role');
+    setUserRole(storedRole);
+  }, []);
+
+  // PrivateRoute component to restrict access to authenticated users only
+  const Routte = ({ element, requiredRole }) => {
+    if (isAuthenticated) {
+      // If user is authenticated
+      if (userRole === requiredRole) {
+        // If user's role matches requiredRole, render the element
+        return element;
+      } else {
+        localStorage.removeItem('token'); 
+        localStorage.removeItem('role');  
+        // If user's role does not match requiredRole, redirect to login
+        return <Navigate to="/login" replace />;
+      }
+    } else {
+      localStorage.removeItem('token'); 
+      localStorage.removeItem('role');  
+      return <Navigate to="/login" replace />;
+    }
+  };
+
+  Routte.propTypes = {
+    element: PropTypes.element.isRequired,
+    requiredRole: PropTypes.string.isRequired
+  };
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    setIsAuthenticated(!!token);
+    const storedRole = localStorage.getItem('role');
+    setUserRole(storedRole);
+  }, []);
+
+  return (
+    <>
+      {!isDashboardAdmin && !isDashboardCoach && <Navbar/>}
+      
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/recipes" element={<Recipes />} />
+        <Route path="/client_register" element={<Register />} />
+        <Route path="/coach_register" element={<CoachRegister />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/users" element={<Users />} />
+        <Route path="/coaches" element={<Coaches />} />
+        <Route path="/BMRCalculator" element={<BMRCalculator />} requiredRole="client" />
+        <Route path="/dashboardcoach" element={<Dashboardcoach />} requiredRole="coach" />
+        <Route path="/dashboardadmin" element={<Dashboardadmin />} requiredRole="admin" />
+        <Route path="/Favorites" element={<Favorites />} requiredRole="client" />
+        <Route path="/payment-cancel" element={<PaymentCancel />} requiredRole="client" />
+        <Route path="/payment-success" element={<PaymentSuccess />} requiredRole="client" />
+      </Routes>
+      {!isDashboardAdmin && !isDashboardCoach && <Footer />}
+    </>
+  );
+}
 
 export default function App() {
   return (
@@ -23,72 +96,4 @@ export default function App() {
       <AppContent />
     </Router>
   );
-}
-
-function AppContent() {
-  const location = useLocation();
-  const isDashboardCoach = location.pathname === '/dashboardcoach';
-  const isDashboardAdmin = location.pathname === '/dashboardadmin';
-  const user = getUser(); // Implement this function
-
-  return (
-    <>
-      {!isDashboardAdmin && !isDashboardCoach && <Navbar />}
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/recipes" element={<Recipes />} />
-        <Route path="/client_register" element={<Register />} />
-        <Route path="/coach_register" element={<CoachRegister />} />
-        <Route path="/" element={<Home />} />
-        <Route path="/coaches" element={<Coaches />} />
-        <Route path="/BMRCalculator" element={<BMRCalculator />} />
-        <Route path="/dashboardcoach" element={<Dashboardcoach />} requiredRole="coach" user={user} />
-        <Route path="/dashboardadmin" element={<Dashboardadmin />} requiredRole="admin" user={user} />
-        <Route path="/Favorites" element={<Favorites />} requiredRole="client" user={user} />
-        <Route path="/payment-cancel" element={<PaymentCancel />} requiredRole="client" user={user} />
-        <Route path="/payment-success" element={<PaymentSuccess />} requiredRole="client" user={user} />
-      </Routes>
-      {!isDashboardAdmin && !isDashboardCoach && <Footer />}
-    </>
-  );
-}
-
-// function PrivateRoute({ element, requiredRole, user }) {
-//   if (!user) {
-//     // Redirect to login if user not logged in
-//     return <Navigate to="/login" />;
-//   }
-
-//   if (user.role === requiredRole) {
-//     // Render the requested element if user has the required role
-//     return element;
-//   }
-
-//   // Redirect to unauthorized page or display access denied message
-//   return <Navigate to="/unauthorized" />;
-// }
-
-// PrivateRoute.propTypes = {
-//   element: PropTypes.element.isRequired, // Prop validation for 'element'
-//   requiredRole: PropTypes.string.isRequired,
-//   user: PropTypes.shape({
-//     role: PropTypes.string.isRequired // Prop validation for 'user.role'
-//   })
-// };
-
-function getUser() {
-  const token = localStorage.getItem('token');
-
-  if (token) {
-    try {
-      const decodedToken = jwtDecode(token); // Using decode function instead of jwt_decode
-      const role = decodedToken.role;
-      return { role };
-    } catch (error) {
-      console.error('Error decoding token:', error);
-      localStorage.removeItem('token');
-    }
-  }
-
-  return null;
 }

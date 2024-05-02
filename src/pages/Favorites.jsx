@@ -10,10 +10,7 @@ export default function Favorites() {
         const fetchData = async () => {
             try {
                 const token = localStorage.getItem('token');
-                if (!token) {
-                    console.error('JWT token not found in local storage');
-                    return;
-                }
+                
 
                 const response = await fetch('http://127.0.0.1:8000/api/favorites/all', {
                     method: 'GET',
@@ -43,10 +40,7 @@ export default function Favorites() {
     const unheart = async (id) => {
         try {
             const token = localStorage.getItem('token');
-            if (!token) {
-                console.error('JWT token not found in local storage');
-                return;
-            }
+            
             const response = await fetch(`http://127.0.0.1:8000/api/unfave/${id}`, {
                 method: 'DELETE',
                 headers: {

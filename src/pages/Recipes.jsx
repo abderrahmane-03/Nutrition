@@ -16,17 +16,15 @@ export default function Recipes() {
         const fetchCoaches = async () => {
 
             try {
+               
                 const token = localStorage.getItem('token');
-            if (!token) {
-                console.error('JWT token not found in local storage');
-                return;
-            }
 
                 const response = await fetch('http://127.0.0.1:8000/api/coaches/all', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
-                        Authorization: `Bearer ${token}`
+                        
+                    Authorization: `Bearer ${token}`
                     }
                 });
 
@@ -90,16 +88,14 @@ export default function Recipes() {
     const fetchFavorites = async () => {
         try {
             const token = localStorage.getItem('token');
-            if (!token) {
-                console.error('JWT token not found in local storage');
-                return;
-            }
+            
 
             const response = await fetch('http://127.0.0.1:8000/api/recipefavorites', {
                 method: 'GET',
                 headers: {
                     Accept: 'application/json',
                     'Content-Type': 'application/json',
+                    
                     Authorization: `Bearer ${token}`
                 }
             });
@@ -124,17 +120,14 @@ export default function Recipes() {
         const fetchData = async () => {
             try {
                 const token = localStorage.getItem('token');
-                if (!token) {
-                    console.error('JWT token not found in local storage');
-                    return;
-                }
+               
 
                 const response = await fetch('http://127.0.0.1:8000/api/recipes/all', {
                     method: 'GET',
                     headers: {
                         Accept: 'application/json',
                         'Content-Type': 'application/json',
-                        Authorization: `Bearer ${token}`
+                    Authorization: `Bearer ${token}`
                     }
                 });
 

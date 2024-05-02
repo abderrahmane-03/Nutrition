@@ -184,17 +184,14 @@ export default function Coaches() {
 
     const fetchFavorites = async () => {
         try {
+            
             const token = localStorage.getItem('token');
-            if (!token) {
-                console.error('JWT token not found in local storage');
-
-            }
-
             const response = await fetch('http://127.0.0.1:8000/api/favorites', {
                 method: 'GET',
                 headers: {
                     Accept: 'application/json',
                     'Content-Type': 'application/json',
+                    
                     Authorization: `Bearer ${token}`
                 }
             });
@@ -222,10 +219,7 @@ export default function Coaches() {
     const fetchRatings = async () => {
         try {
             const token = localStorage.getItem('token');
-            if (!token) {
-                console.error('JWT token not found in local storage');
-                return;
-            }
+            
     
             const response = await fetch('http://127.0.0.1:8000/api/ratings', {
                 method: 'GET',
@@ -259,10 +253,7 @@ export default function Coaches() {
     const fetchReservations = async () => {
         try {
             const token = localStorage.getItem('token');
-            if (!token) {
-                console.error('JWT token not found in local storage');
-
-            }
+            
 
             const response = await fetch('http://127.0.0.1:8000/api/Reservations', {
                 method: 'GET',
@@ -330,10 +321,7 @@ export default function Coaches() {
 
             try {
                 const token = localStorage.getItem('token');
-                if (!token) {
-                    console.error('JWT token not found in local storage');
-                    return;
-                }
+                
                 const response = await fetch('http://127.0.0.1:8000/api/coaches/all', {
                     method: 'GET',
                     headers: {

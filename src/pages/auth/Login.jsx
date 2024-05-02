@@ -24,45 +24,48 @@ const Signin = () => {
         return;
     }
     
-        try {
-            const response = await fetch('http://127.0.0.1:8000/api/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
-            });
+    try {
+        const response = await fetch('http://127.0.0.1:8000/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
     
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message);
-            }
-    
-            const data = await response.json();
-            if (data && data.status === 'success' && data.authorisation && data.authorisation.token) {
-                localStorage.setItem('token', data.authorisation.token);
-    
-                if (data && data.user && data.user.role) {
-                    switch (data.user.role) {
-                        case 'coach':
-                            navigate('/dashboardcoach');
-                            break;
-                        case 'client':
-                            navigate('/Recipes');
-                            break;
-                        case 'admin':
-                            navigate('/dashboardadmin');
-                            break;
-                        default:
-                            console.log("Role not recognized:", data.user.role);
-                            navigate('/defaultRedirectPage');
-                            break;
-                    }
-                }
-            } else {
-                setError(data.message); // Set error message returned from backend
-            }
-        } catch (error) {
-            setError("An error occurred. Please try again."); // Set generic error message if something unexpected happens
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message);
         }
+    
+        const data = await response.json();
+        if (data && data.status === 'success' && data.authorisation && data.authorisation.token) {
+            localStorage.setItem('token', data.authorisation.token);
+    
+            if (data && data.user && data.user.role) {
+                localStorage.setItem('role', data.user.role); // Store user's role in local storage
+                switch (data.user.role) {
+                    case 'coach':
+                        navigate('/dashboardcoach');
+                        break;
+                    case 'client':
+                        navigate('/Recipes');
+                        break;
+                    case 'admin':
+                        navigate('/dashboardadmin');
+                        break;
+                    default:
+                        console.log("Role not recognized:", data.user.role);
+                        navigate('/defaultRedirectPage');
+                        break;
+                }
+            }
+        } else {
+            setError(data.message); // Set error message returned from backend
+        }
+    } catch (error) {
+        console.error('Login error:', error.message);
+    }
+    
+       
     }
     
     return (
