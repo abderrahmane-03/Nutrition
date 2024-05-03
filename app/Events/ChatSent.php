@@ -35,7 +35,7 @@ class ChatSent implements ShouldBroadcastNow
      */
     public function broadcastOn()
     {
-        return new Channel('chattest');
+        return new Channel('chattestt');
     }
     public function broadcastWith(): array
     {

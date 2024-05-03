@@ -13,16 +13,28 @@ use Illuminate\Support\Facades\Auth;
 class chatController extends Controller
 {
 
-    public function chatForm($user_id){
+    public function chatForm($userId)
+    {
+        $sender = Auth::guard('api')->user()->id;
+        $receiver = User::where('id', $userId)->first();
+        $messages1 = Message::where('sender', $sender)
+            ->where('receiver', $userId)
+            ->get();
 
-        $receiver = User::findOrFail($user_id);
-        broadcast(new ChatSent($receiver, '2'));
+        $messages2 = Message::where('sender', $userId)
+            ->where('receiver', $sender)
+            ->get();
+
+        $allMessages = $messages1->merge($messages2)->sortBy('created_at'); // Sort messages by created_at
+
         return response()->json([
             'status' => 'success',
-            'receiver' => $receiver,
-
+            'messages' => $allMessages,
+            'receiver' => $receiver, // Include receiver ID in the response
         ], 200);
     }
+
+
 
     public function sendMessage($user_id, Request $request){
 
@@ -61,7 +73,18 @@ class chatController extends Controller
         ], 200);
     }
 
+    public function bringMessage($receiver) {
+        $sender = Auth::guard('api')->user()->id;
 
+        $messages = Message::where('receiver', $receiver)
+                            ->where('sender', $sender)
+                            ->get();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => $messages,
+        ], 200);
+    }
 
 }
 

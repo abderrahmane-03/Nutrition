@@ -48,7 +48,8 @@ Route::post('/stripe/webhook', [App\Http\Controllers\ClientController::class, 'h
 Route::get('/recipes/coach',[\App\Http\Controllers\RecipesController::class,'CoachRecipes']);
 
 Route::post('/recipes/create',[\App\Http\Controllers\RecipesController::class,'createRecipe']);
-Route::get('/chatForm/{user_id}', [App\Http\Controllers\chatController::class, 'chatForm']);
+Route::get('/chatForm/{userId}', [App\Http\Controllers\chatController::class, 'chatForm']);
 Route::post('/chatMessage/{user_id}', [App\Http\Controllers\chatController::class, 'sendMessage']);
 Route::get('/bringClients', [App\Http\Controllers\chatController::class, 'bringClients']);
 Route::get('/Auth', [App\Http\Controllers\chatController::class, 'auth']);
+Route::get('/bringMessages/{receiver}', [App\Http\Controllers\chatController::class, 'bringMessage']);
