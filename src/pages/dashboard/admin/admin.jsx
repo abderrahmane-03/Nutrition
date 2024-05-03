@@ -1,5 +1,5 @@
-import React from 'react'
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+
+import { BrowserRouter as Navigate } from 'react-router-dom';
 import logo from "../../../assets/logo.png";
 import { Link } from 'react-router-dom';
 import Users from './Users';

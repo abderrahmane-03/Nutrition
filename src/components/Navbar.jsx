@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Pusher from "pusher-js";
 import logo from "../assets/logo.png";
 import Echo from 'laravel-echo';
 
@@ -10,7 +9,6 @@ export default function Navbar() {
     const handleToggleMenu = () => {
       setShowMenu(!showMenu);
     };
-  const [userId, setUserId] = useState();
   const [newMessage, setNewMessage] = useState("");
   const [activeLink, setActiveLink] = useState(null);
   const [showChat, setShowChat] = useState(false);
@@ -118,7 +116,7 @@ export default function Navbar() {
         throw new Error('Failed to send message');
       }
 
-      const data = await response.json();
+       await response.json();
       setNewMessage("");
     } catch (error) {
       console.error('Error sending message:', error);
@@ -247,7 +245,7 @@ export default function Navbar() {
               <button id="login" onClick={() => setShowClient(!showClient)} className="hover:bg-green-400 rounded-md p-1">
                 <svg width="25px" height="25px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <circle cx="12" cy="6" r="4" stroke="#ffffff" strokeWidth="1.5"></circle> <path d="M15 20.6151C14.0907 20.8619 13.0736 21 12 21C8.13401 21 5 19.2091 5 17C5 14.7909 8.13401 13 12 13C15.866 13 19 14.7909 19 17C19 17.3453 18.9234 17.6804 18.7795 18" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round"></path> </g></svg>
               </button>
-              <span>Client :  {receiver && receiver.name}</span>
+              <span>Coach :  {receiver && receiver.name}</span>
                                 <div onClick={() => setShowClient(false)} className="relative inline-block">
                 <button onClick={() => setShowChat(!showChat)} className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">X</button>
               </div>

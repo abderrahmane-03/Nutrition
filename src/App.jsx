@@ -22,18 +22,9 @@ function AppContent() {
   const location = useLocation();
   const isDashboardCoach = location.pathname === '/dashboardcoach';
   const isDashboardAdmin = location.pathname === '/dashboardadmin';
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userRole, setUserRole] = useState(null);
 
-  useEffect(() => {
-    // Check if the user is authenticated, e.g., by checking if token exists in localStorage
-    const token = localStorage.getItem('token');
-    setIsAuthenticated(token); // Set isAuthenticated to true if token exists, false otherwise
-
-    // Fetch user role from local storage
-    const storedRole = localStorage.getItem('role');
-    setUserRole(storedRole);
-  }, []);
+  
 
   // PrivateRoute component to restrict access to authenticated users only
   const Routte = ({ element, requiredRole }) => {
@@ -63,8 +54,7 @@ function AppContent() {
     requiredRole: PropTypes.string.isRequired
   };
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    setIsAuthenticated(!!token);
+    
     const storedRole = localStorage.getItem('role');
     setUserRole(storedRole);
   }, []);

@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import logo from "../../../assets/logo.png";
 import { Link, Navigate } from 'react-router-dom';
-import Pusher from "pusher-js";
 import loading from '../../../assets/loading.gif';
 import Echo from 'laravel-echo';
 
@@ -238,9 +237,8 @@ const Dashboardcoach = () => {
                 throw new Error('Failed to send message');
             }
 
-            const data = await response.json();
-            setMessages(prevMessages => [...prevMessages, data.message]);
-            setNewMessage("");
+            await response.json();
+           setNewMessage("");
         } catch (error) {
             console.error('Error sending message:', error);
         }
