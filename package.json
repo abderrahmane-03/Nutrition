@@ -19,6 +19,7 @@
         "@stripe/stripe-js": "^3.3.0",
         "axios": "^1.6.8",
         "jwt-decode": "^4.0.0",
+        "laravel-echo": "^1.16.1",
         "lucide-react": "^0.364.0",
         "pusher-js": "^8.4.0-rc2",
         "react": "^18.2.0",
