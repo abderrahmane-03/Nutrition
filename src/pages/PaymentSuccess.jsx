@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 function PaymentSuccess() {
 
   return (
-<div className="bg-gradient-to-b from-green-400 to-black h-[30rem]">
+<div className="bg-gradient-to-b from-green-400 to-black h-[40rem]">
       <div className="bg-white p-6 absolute  rounded-lg top-44 left-1/3 ml-16">
         <svg viewBox="0 0 24 24" className="text-green-600 w-16 h-16 mx-auto my-6">
             <path fill="currentColor"

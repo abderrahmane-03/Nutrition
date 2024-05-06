@@ -13,7 +13,7 @@ export default function Coaches() {
     const [bicepload, setBicepload] = useState(false);
     const [coach_counts, setCoachCounts] = useState({});
     const stripe = useStripe();
-    const [review, setReview] = useState(null); // Initialize review state
+    const [review, setReview] = useState(null); 
    
    
    
@@ -39,21 +39,17 @@ export default function Coaches() {
                 },
                 body: JSON.stringify({
                     coache_id: coach,
-                    rating: reviewValue // Include the rating value in the request body
+                    rating: reviewValue 
                 }),
             });
     
-            // Check if response is successful
             if (!response.ok) {
                 throw new Error("Failed to initiate rating");
             }
             
-            // Check if the coach is not rated yet
             if (!isRated(coach)) {
-                // Add the coach to the ratings list
                 setRatings(prevRatings => [...prevRatings, { coache_id: coach }]);
                 
-                // Fetch updated coach data with new avg_rating value
                 const updatedCoachResponse = await fetch(`http://127.0.0.1:8000/api/coach/${coach}`, {
                     method: "GET",
                     headers: {
@@ -69,7 +65,6 @@ export default function Coaches() {
     
                 const updatedCoachData = await updatedCoachResponse.json();
     
-                // Update the coaches state with the modified coach entry
                 setCoaches(prevCoaches => prevCoaches.map(coachItem => {
                     if (coachItem.id === coach) {
                         return { ...coachItem, avg_rating: updatedCoachData.avg_rating };
@@ -78,7 +73,6 @@ export default function Coaches() {
                 }));
             }
             
-            // Optionally handle success response here
     
         } catch (error) {
             console.error("Error:", error);
@@ -109,18 +103,15 @@ export default function Coaches() {
                 }),
             });
 
-            // Check if response is successful
             if (!response.ok) {
                 throw new Error("Failed to initiate checkout");
             }
 
-            // Parse JSON response
+            
             const data = await response.json();
             const sessionId = data.sessionId;
 
-            console.log("Session ID:", sessionId); // Log sessionId for debugging
-
-            // Redirect to Stripe checkout
+            console.log("Session ID:", sessionId); 
             redirectToStripeCheckout(sessionId);
         } catch (error) {
             console.error("Error:", error);
@@ -171,11 +162,9 @@ export default function Coaches() {
                 }
 
                 if (isFavorite(id)) {
-                    // If a favorite is being removed, filter it out from the state
                     setFavorites(prevFavorites => prevFavorites.filter(favorite => favorite.coache_id !== id));
                 } else {
-                    // If a new favorite is being added, fetch the updated favorites and set the state
-                    fetchFavorites(); // Fetch updated favorites
+                    fetchFavorites(); 
                 }
             } catch (error) {
                 console.error('Error removing favorite:', error);
@@ -210,9 +199,8 @@ export default function Coaches() {
         } catch (error) {
             console.error('Error fetching favorites:', error);
         } finally {
-            // Introduce a delay before setting isLoading to false
             setTimeout(() => {
-                setIsLoading(false); // Set loading to false after fetching data
+                setIsLoading(false); 
             }, 2000);
         }
     };
@@ -236,16 +224,15 @@ export default function Coaches() {
     
             const data = await response.json();
             if (Array.isArray(data)) {
-                setRatings(data); // Assuming the data is directly an array of ratings
+                setRatings(data); 
             } else {
                 console.error('Data received from API is not in the expected format:', data);
             }
         } catch (error) {
             console.error('Error fetching ratings:', error);
         } finally {
-            // Introduce a delay before setting isLoading to false
             setTimeout(() => {
-                setIsLoading(false); // Set loading to false after fetching data
+                setIsLoading(false); 
             }, 2000);
         }
     };
@@ -274,9 +261,8 @@ export default function Coaches() {
         } catch (error) {
             console.error('Error fetching favorites:', error);
         } finally {
-            // Introduce a delay before setting isLoading to false
             setTimeout(() => {
-                setIsLoading(false); // Set loading to false after fetching data
+                setIsLoading(false); 
             }, 2000);
         }
     };
@@ -304,11 +290,9 @@ export default function Coaches() {
             }
 
             if (isFavorite(id)) {
-                // If a favorite is being removed, filter it out from the state
                 setFavorites(prevFavorites => prevFavorites.filter(favorite => favorite.coach_id !== id));
             } else {
-                // If a new favorite is being added, fetch the updated favorites and set the state
-                fetchFavorites(); // Fetch updated favorites
+                fetchFavorites();
             }
         } catch (error) {
             console.error('Error toggling favorite:', error);
@@ -343,9 +327,9 @@ export default function Coaches() {
             } catch (error) {
                 console.error('Error fetching coaches:', error);
             } finally {
-                // Introduce a delay before setting isLoading to false
+                
                 setTimeout(() => {
-                    setIsLoading(false); // Set loading to false after fetching data
+                    setIsLoading(false); 
                 }, 2000);
             }
         };
@@ -408,11 +392,11 @@ export default function Coaches() {
                             <div className="flex flex-col">
                                 <div className="h-12 w-12 rounded-full bg-neutral-400/50 overflow-hidden">
                                 <img className="object-cover w-full h-full" src={`http://127.0.0.1:8000/${coach.user.profile_picture}`} alt="" /></div>
-                                <div className="text-sm font-serif">{coach.experience} years experience</div>
+                                <div className="text-sm w-auto font-serif">{coach.experience} years experience</div>
                                 <div className='flex'><div className='font-bold'>{coach.avg_rating}</div><Rating name="half-rating-read" value={coach.avg_rating} precision={0.5} readOnly />
                                 </div></div>
                             <div className="flex-1">
-                                <div className="mb-1 h-5 w-3/5 rounded-lg text-lg font-serif">{coach.user.name}{coach.verified && (
+                                <div className="flex mb-1 h-5 w-3/5 rounded-lg text-lg font-serif">{coach.user.name}{coach.verified && (
                                     <svg
                                         className="ml-4 w-6 h-6 text-gray-800 dark:text-blue-600 "
                                         xmlns="http://www.w3.org/2000/svg"
@@ -425,8 +409,8 @@ export default function Coaches() {
                                         />
                                     </svg>
                                 )}</div>
-                                <div className="h-5 w-[90%] rounded-lg text-sm font-serif">{coach.bio}</div>
-                                <div className="text-lg mt-4 font-bold font-serif">{coach.sport}</div>
+                                <div className="h-5 w-auto rounded-lg text-sm font-serif">{coach.bio}</div>
+                                <div className="text-lg mt-10 font-bold font-serif">{coach.sport}</div>
                                 <div className="font-serif">-{coach.programme}</div>
                                 <div className="font-serif">-{coach.duration}</div>
                                 <div className="w-full h-4 rounded-md">{coach.services}</div>
@@ -494,12 +478,12 @@ export default function Coaches() {
                                     </Box>
                                 )
                             ) : (
-                                <div>
+                                <div className="relative">
                                     <strong className='mt-4 ml-28'>{coach.price} MAD</strong>
                                     <button
                                         onClick={() => handlePayment(coach.price, coach.user.name, coach.duration, coach.id)}
                                         disabled={bicepload}
-                                        className="ml-3 w-18 h-14 bg-green-400 rounded-md p-3 font-bold hover:bg-green-600"
+                                        className="absolute ml-3 w-18 h-14 bg-green-400 rounded-md p-3 font-bold hover:bg-green-600"
                                     >
                                         <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ai ai-Cart">
                                             <path d="M5 7h13.79a2 2 0 0 1 1.99 2.199l-.6 6A2 2 0 0 1 18.19 17H8.64a2 2 0 0 1-1.962-1.608L5 7z"></path>

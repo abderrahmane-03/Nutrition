@@ -30,10 +30,10 @@ export default function BMRCalculator() {
     let caloriesGoal;
     switch (weightGoal) {
       case 'lose':
-        caloriesGoal = maintenanceCalories - 500; // Aim to lose 0.5 kg per week
+        caloriesGoal = maintenanceCalories - 500; 
         break;
       case 'gain':
-        caloriesGoal = maintenanceCalories + 500; // Aim to gain 0.5 kg per week
+        caloriesGoal = maintenanceCalories + 500; 
         break;
       default:
         caloriesGoal = maintenanceCalories;

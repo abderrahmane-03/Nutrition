@@ -6,15 +6,13 @@ import { useState } from 'react';
 const Signin = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState(null); // State variable for error
+    const [error, setError] = useState(null); 
 
     const navigate = useNavigate();
 
     const submit = async (e) => {
         e.preventDefault();
-     // Basic client-side validation
      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    // Client-side validation using regex
     if (!email.trim() || !password.trim()) {
         setError("Please enter both email and password.");
         return;
@@ -41,7 +39,7 @@ const Signin = () => {
             localStorage.setItem('token', data.authorisation.token);
     
             if (data && data.user && data.user.role) {
-                localStorage.setItem('role', data.user.role); // Store user's role in local storage
+                localStorage.setItem('role', data.user.role); 
                 switch (data.user.role) {
                     case 'coach':
                         navigate('/dashboardcoach');
@@ -59,7 +57,7 @@ const Signin = () => {
                 }
             }
         } else {
-            setError(data.message); // Set error message returned from backend
+            setError(data.message); 
         }
     } catch (error) {
         console.error('Login error:', error.message);
@@ -88,7 +86,7 @@ const Signin = () => {
                                 onChange={(e) => setPassword(e.target.value)}
                                 className='bg-slate w-full bg-opacity-40 text-[0.9rem] px-[1rem] py-[0.75rem] rounded-xl text-main focus:outline-none'/>
                             {error && <p className='text-red-500 font-medium'>{error}</p>}<div className='w-full flex justify-end'>
-                                <p className='text-main text-[0.9rem] font-medium cursor-pointer underline hover:text-gray'>Forgot Password?</p>
+                                
                             </div>
                         </div>
                         <div className='w-[80%] mx-auto flex items-center justify-center'>

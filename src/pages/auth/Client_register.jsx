@@ -25,26 +25,22 @@ const ClientRegister = () => {
     const submit = async (e) => {
         e.preventDefault();
 
-        // Reset all error messages
         setPasswordError('');
         setAgeError('');
         setHeightError('');
         setWeightError('');
         setError('');
 
-        // Check if any required fields are empty
         if (!name || !lastName || !userName || !email || !password || !confirmPassword) {
             setError('All fields are required');
             return;
         }
 
-        // Check if password and confirm password match
         if (password !== confirmPassword) {
             setPasswordError('Passwords do not match');
             return;
         }
 
-        // Additional validation checks for other fields
         if (!age || isNaN(age) || age < 0) {
             setAgeError('Age must be a positive number');
             return;
@@ -60,7 +56,6 @@ const ClientRegister = () => {
             return;
         }
 
-        // Check the gender input
         const genderInputs = document.querySelectorAll('input[name="gender"]');
         let selectedGender = '';
         genderInputs.forEach(input => {
@@ -69,10 +64,8 @@ const ClientRegister = () => {
             }
         });
 
-        // Create a new FormData object
         const formData = new FormData();
 
-        // Append form data to FormData object
         formData.append('name', name);
         formData.append('lastname', lastName);
         formData.append('username', userName);
@@ -84,13 +77,10 @@ const ClientRegister = () => {
         formData.append('interest', interest);
         formData.append('gender', selectedGender);
 
-        // Check if a file is selected
         if (picture) {
-            formData.append('profile_picture', picture[0]); // Assuming picture is an array of files
-        }
+            formData.append('profile_picture', picture[0]); }
 
         try {
-            // Send form data with file to server
             const response = await fetch('http://127.0.0.1:8000/api/register/client', {
                 method: 'POST',
                 body: formData
@@ -99,11 +89,9 @@ const ClientRegister = () => {
                 const errorData = await response.json();
                 throw new Error(errorData.message);
             }
-            // Check if request was successful
             if (response.ok) {
                 navigate('/login');
             } else {
-                // Handle error
                 console.error('Error:', response.statusText);
             }
         } catch (error) {
@@ -199,9 +187,7 @@ const ClientRegister = () => {
                         <input
                             id="dropzone-file"
                             type="file"
-                            // Remove value and onChange props
                             className="hidden"
-                            // Set onChange event to handle file selection
                             onChange={(e) => setPicture(e.target.files)}
                         /></label>
                 </div>

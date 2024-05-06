@@ -16,7 +16,6 @@ export default function coachdash() {
      
         localStorage.removeItem('token'); 
         localStorage.removeItem('role');  
-        // If user's role does not match requiredRole, redirect to login
          return <Navigate to="/login" replace />;
       } return (  
     <>

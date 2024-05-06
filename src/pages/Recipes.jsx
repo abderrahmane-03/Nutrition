@@ -41,10 +41,8 @@ export default function Recipes() {
             } catch (error) {
                 console.error('Error fetching coaches:', error);
             } finally {
-                // Introduce a delay before setting isLoading to false
                 setTimeout(() => {
-                    setIsLoading(false); // Set loading to false after fetching data
-                }, 2000);
+                    setIsLoading(false);  }, 2000);
             }
         };
 
@@ -72,13 +70,10 @@ export default function Recipes() {
                 throw new Error(errorData.message);
             }
 
-            // Update favorites state using the callback function form of setFavorites
             if (isFavorite(id)) {
-                // If a favorite is being removed, filter it out from the state
                 setFavorites(prevFavorites => prevFavorites.filter(favorite => favorite.recipe_id !== id));
             } else {
-                // If a new favorite is being added, fetch the updated favorites and set the state
-                fetchFavorites(); // Fetch updated favorites
+                fetchFavorites(); 
             }
         } catch (error) {
             console.error('Error removing favorite:', error);
@@ -144,9 +139,8 @@ export default function Recipes() {
             } catch (error) {
                 console.error('Error fetching recipes:', error);
             } finally {
-                // Introduce a delay before setting isLoading to false
                 setTimeout(() => {
-                    setIsLoading(false); // Set loading to false after fetching data
+                    setIsLoading(false); 
                 }, 2000);
             }
         };
@@ -155,7 +149,6 @@ export default function Recipes() {
     }, []);
 
     useEffect(() => {
-        // Fetch favorites on initial load
         fetchFavorites();
     }, []);
 
@@ -182,13 +175,10 @@ export default function Recipes() {
                 throw new Error(errorData.message);
             }
 
-            // Update favorites state based on the action (add or remove favorite)
             if (isFavorite(id)) {
-                // If a favorite is being removed, filter it out from the state
                 setFavorites(prevFavorites => prevFavorites.filter(favorite => favorite.recipe_id !== id));
             } else {
-                // If a new favorite is being added, fetch the updated favorites and set the state
-                fetchFavorites(); // Fetch updated favorites
+                fetchFavorites(); 
             }
         } catch (error) {
             console.error('Error toggling favorite:', error);
@@ -199,13 +189,11 @@ export default function Recipes() {
     if (isLoading) {
         return (
             <div className="min-h-screen bg-gradient-to-b from-green-400 to-black flex justify-center items-center">
-                {/* Display the loading GIF centered and auto-looped */}
                 <img src={loading} alt="loading" className="fixed right-0 w-40 " />
                 <div className="flex ml-32 gap-3 flex-wrap">
                     {[...Array(8)].map((_, index) => (
                         <div key={index} className="flex mt-10 flex-col bg-neutral-300 ml-4 w-80 h-96 animate-pulse rounded-xl p-4 gap-1">
-                            {/* Placeholder content for recipe */}
-                        </div>
+                          </div>
                     ))}
                 </div>
             </div>
@@ -231,13 +219,11 @@ export default function Recipes() {
                                     <div className="text-sm font-serif">{coach.experience} years experience</div>
                                     <div className='flex'>
                                         <div className='font-bold'>{coach.avg_rating}</div>
-                                        {/* Assuming you have a Rating component */}
                                         <Rating name="half-rating-read" value={coach.avg_rating} precision={0.5} readOnly />
                                     </div>
                                 </div>
                                 <div className="flex-1">
                                     <div className="mb-1 h-5  rounded-lg text-lg font-serif">{coach.user.name}</div>
-                                    {/* Display verified icon if coach is verified */}
                                     {coach.verified && (
                                         <svg
                                             className="ml-4 w-6 h-6 text-gray-800 dark:text-blue-600 "

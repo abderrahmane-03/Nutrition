@@ -26,20 +26,16 @@ function AppContent() {
 
   
 
-  // PrivateRoute component to restrict access to authenticated users only
-  const Routte = ({ element, requiredRole }) => {
+ const Routte = ({ element, requiredRole }) => {
     const token = localStorage.getItem('token');
 
     if (!token) {
-      // If user is authenticated
-      console.log("here");
+    console.log("here");
       if (userRole === requiredRole) {
-        // If user's role matches requiredRole, render the element
         return element;
       } else {
         localStorage.removeItem('token'); 
         localStorage.removeItem('role');  
-        // If user's role does not match requiredRole, redirect to login
         return <Navigate to="/login"  />;
       }
     } else {

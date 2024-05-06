@@ -5,11 +5,17 @@ import loading from '../../../assets/loading.gif';
 import Echo from 'laravel-echo';
 
 const Dashboardcoach = () => {
+    const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
+    const [cooking_time, setCooking_time] = useState('');
+    const [ingrediants, setIngrediants] = useState('');
+    const [instructions, setInstructions] = useState('');
+    const [nutrition_information, setNutrition_information] = useState('');
     const [Authuser, setAuthuser] = useState();
     const [Reservations, setClients] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [receiver, setReceiver] = useState();
-    const [picture, setPicture] = useState('');
+    const [picture, setPicture] = useState(null);
     const [recipes, setRecipes] = useState([]);
     const [conversations, setConversation] = useState([]);
     const [newMessage, setNewMessage] = useState("");
@@ -20,41 +26,35 @@ const Dashboardcoach = () => {
     const sortedConversations = Object.values(conversations).sort((a, b) => {
         return new Date(a.created_at) - new Date(b.created_at);
     });
-    const [formData, setFormData] = useState({
-        title: '',
-        description: '',
-        cooking_time: '',
-        ingrediants: '',
-        instructions: '',
-        picture: '',
-        nutrition_information: '',
-        // Default coach_id, you can change it according to your logic
-    });
 
-    const handleAddRecipe = () => {
-        setShowForm(!showForm); // Toggle the state to show/hide the form
-    };
+        const handleAddRecipe = () => {
+            setShowForm(!showForm);
+        };
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        if (!formData.title || !formData.description || !formData.cooking_time || !formData.ingrediants || !formData.instructions || !formData.nutrition_information) {
-            setError('All fields are required.');
-            return;
-        }
-
-        try {
-            const token = localStorage.getItem('token');
-            const formData = new FormData();
-            formData.append('title', formData.title);
-            formData.append('description', formData.description);
-            formData.append('cooking_time', formData.cooking_time);
-            formData.append('ingrediants', formData.ingrediants);
-            formData.append('instructions', formData.instructions);
-            formData.append('nutrition_information', formData.nutrition_information);
-            if (picture) {
-                formData.append('picture', picture[0]); // Assuming picture is an array of files
+        const handleSubmit = async (event) => {
+            event.preventDefault();
+            if (!title || !description || !ingrediants || !instructions || !nutrition_information) {
+                setError('All fields are required.');
+                return;
             }
-
+        
+            if (isNaN(cooking_time) || parseInt(cooking_time) <= 0) {
+                setError('Cooking time must be a valid positive integer.');
+                return;
+            }
+        
+            try {
+                const token = localStorage.getItem('token');
+                const formData = new FormData();
+                formData.append('title', title);
+                formData.append('description', description);
+                formData.append('cooking_time', cooking_time);
+                formData.append('ingrediants', ingrediants);
+                formData.append('instructions',instructions);
+                formData.append('nutrition_information', nutrition_information);
+                if (picture) {
+                    formData.append('picture', picture[0]);
+                }
             const response = await fetch('http://127.0.0.1:8000/api/recipes/create', {
                 method: 'POST',
                 headers: {
@@ -70,17 +70,14 @@ const Dashboardcoach = () => {
 
             const data = await response.json();
             console.log(data);
-            // Handle successful response
         } catch (error) {
             console.error('Error creating recipe:', error);
-            // Handle error
         }
     };
 
     const fetchData = async (userId) => {
         try {
             if (!userId) {
-                // If userId is undefined, return early without making the fetch request
                 return;
             }
 
@@ -111,8 +108,7 @@ const Dashboardcoach = () => {
             const echo = new Echo(options);
             echo.channel('chattestt')
                 .listen('.chatMessage', () => {
-                    fetchData(userId); // Fetch messages again with the same userId when a new message event is received
-                });
+                    fetchData(userId); });
 
         } catch (error) {
             console.error('Error fetching User:', error);
@@ -204,9 +200,8 @@ const Dashboardcoach = () => {
             } catch (error) {
                 console.error('Error fetching recipes:', error);
             } finally {
-                // Introduce a delay before setting isLoading to false
                 setTimeout(() => {
-                    setIsLoading(false); // Set loading to false after fetching data
+                    setIsLoading(false);
                 }, 2000);
             }
         };
@@ -275,9 +270,8 @@ const Dashboardcoach = () => {
             } catch (error) {
                 console.error('Error fetching recipes:', error);
             } finally {
-                // Introduce a delay before setting isLoading to false
                 setTimeout(() => {
-                    setIsLoading(false); // Set loading to false after fetching data
+                    setIsLoading(false);
                 }, 2000);
             }
         };
@@ -289,7 +283,6 @@ const Dashboardcoach = () => {
         if (!token) {
             localStorage.removeItem('token');
             localStorage.removeItem('role');
-            // If user's role does not match requiredRole, redirect to login
             return <Navigate to="/login" replace />;
         }
     });
@@ -297,7 +290,7 @@ const Dashboardcoach = () => {
 
     return (
         <>
-            {isLoading && ( // Render loading image when isLoading state is true
+            {isLoading && ( 
                 <img src={loading} alt="loading" className="fixed  z-50 flex  right-0 bottom-0 w-40  justify-center items-center" />
             )}
             <div className='flex'>
@@ -409,27 +402,27 @@ const Dashboardcoach = () => {
 
                                         <input type="text" placeholder='Title*'
                                             className='bg-slate w-full bg-opacity-40 text-[0.9rem] px-[1rem] py-[0.75rem] rounded-xl text-main focus:outline-none'
-                                            value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} required />
+                                            value={title} onChange={(e) => setTitle(e.target.value)} required />
 
                                         <input type="text" placeholder='Description*'
                                             className='bg-slate w-full bg-opacity-40 text-[0.9rem] px-[1rem] py-[0.75rem] rounded-xl text-main focus:outline-none'
-                                            value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} required />
+                                            value={description}  onChange={(e) => setDescription(e.target.value)} required />
 
                                         <input type="number" placeholder='Cooking Time*'
                                             className='bg-slate w-full bg-opacity-40 text-[0.9rem] px-[1rem] py-[0.75rem] rounded-xl text-main focus:outline-none'
-                                            value={formData.cooking_time} onChange={(e) => setFormData({ ...formData, cooking_time: e.target.value })} required />
+                                            value={cooking_time} onChange={(e) => setCooking_time(e.target.value)} required />
 
                                         <textarea placeholder="Ingredients*"
                                             className='bg-slate w-full bg-opacity-40 text-[0.9rem] px-[1rem] py-[0.75rem] rounded-xl text-main focus:outline-none'
-                                            value={formData.ingrediants} onChange={(e) => setFormData({ ...formData, ingrediants: e.target.value })} required />
+                                            value={ingrediants} onChange={(e) => setIngrediants(e.target.value)} required />
 
                                         <textarea placeholder="Instructions*"
                                             className='bg-slate w-full bg-opacity-40 text-[0.9rem] px-[1rem] py-[0.75rem] rounded-xl text-main focus:outline-none'
-                                            value={formData.instructions} onChange={(e) => setFormData({ ...formData, instructions: e.target.value })} required />
+                                            value={instructions} onChange={(e) => setInstructions(e.target.value)} required />
 
                                         <textarea placeholder="Nutrition Information*"
                                             className='bg-slate w-full bg-opacity-40 text-[0.9rem] px-[1rem] py-[0.75rem] rounded-xl text-main focus:outline-none'
-                                            value={formData.nutrition_information} onChange={(e) => setFormData({ ...formData, nutrition_information: e.target.value })} required />
+                                            value={nutrition_information} onChange={(e) => setNutrition_information(e.target.value)} required />
 
                                     </div>
                                     <div className='w-[80%] mx-4 flex flex-col gap-[1rem]'>

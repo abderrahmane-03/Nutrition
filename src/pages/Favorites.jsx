@@ -131,11 +131,11 @@ export default function Favorites() {
                                 <div className="flex flex-col">
                                 <div className="h-12 w-12 rounded-full bg-neutral-400/50 overflow-hidden">
                                 <img className="object-cover w-full h-full" src={`http://127.0.0.1:8000/${item.coach_user.profile_picture}`} alt="" /></div>
-                                <div className="text-sm font-serif">{item.coach_user.experience} years experience</div>
+                                <div className="text-sm w-auto font-serif">{item.coach_user.experience} years experience</div>
                                 <div className='flex'><div className='font-bold'>{item.favorite.coache.avg_rating}</div><Rating name="half-rating-read" value={item.favorite.coache.avg_rating} precision={0.5} readOnly />
                                 </div></div>
                             <div className="flex-1">
-                                <div className="mb-1 h-5 w-3/5 rounded-lg text-lg font-serif">{item.coach_user.name}{item.favorite.coache.verified && (
+                                <div className="flex mb-1 h-5 w-3/5 rounded-lg text-lg font-serif">{item.coach_user.name}{item.favorite.coache.verified && (
                                     <svg
                                         className="ml-4 w-6 h-6 text-gray-800 dark:text-blue-600 "
                                         xmlns="http://www.w3.org/2000/svg"
@@ -148,8 +148,8 @@ export default function Favorites() {
                                         />
                                     </svg>
                                 )}</div>
-                                    <div className="h-5 w-[90%] rounded-lg text-sm font-serif">{item.favorite.coache.bio}</div>
-                                    <div className="text-lg mt-4 font-bold font-serif">{item.favorite.coache.sport}</div>
+                                    <div className="h-5 w-auto rounded-lg text-sm font-serif">{item.favorite.coache.bio}</div>
+                                    <div className="text-lg mt-10 font-bold font-serif">{item.favorite.coache.sport}</div>
                                     <div className="font-serif">-{item.favorite.coache.programme}</div>
                                     <div className="font-serif">-{item.favorite.coache.duration}</div>
                                     <div className="w-full h-4 rounded-md">{item.favorite.coache.services}</div>
